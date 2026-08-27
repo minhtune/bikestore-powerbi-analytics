@@ -16,9 +16,14 @@ def profile_dataframe(df: pd.DataFrame, table_name: str) -> dict:
     cols_profile = []
     potential_pks = []
     
+    # Detect all-blank / empty rows
+    completely_blank_rows = int(df.isna().all(axis=1).sum())
+    
     for col in df.columns:
         series = df[col]
-        null_count = int(series.isna().sum())
+        # Count NA or empty strings
+        is_empty_str = series.astype(str).str.strip().eq("") if series.dtype == object else pd.Series(False, index=series.index)
+        null_count = int(series.isna().sum() + is_empty_str.sum())
         null_pct = round((null_count / total_rows * 100) if total_rows > 0 else 0, 2)
         distinct_count = int(series.nunique(dropna=False))
         dtype = str(series.dtype)
@@ -54,6 +59,7 @@ def profile_dataframe(df: pd.DataFrame, table_name: str) -> dict:
         "table_name": table_name,
         "row_count": total_rows,
         "col_count": len(df.columns),
+        "completely_blank_rows": completely_blank_rows,
         "potential_pks": potential_pks,
         "columns": cols_profile
     }
@@ -153,7 +159,24 @@ def main():
             pk_flag = " 🔑 *(PK)*" if c["is_potential_pk"] else ""
             range_str = f"[{c['min']} to {c['max']}]" if c['min'] is not None else "-"
             lines.append(f"| `{c['column']}`{pk_flag} | `{c['dtype']}` | {c['null_pct']}% ({c['null_count']}) | {c['distinct_count']} | {c['sample_values']} | {range_str} |")
-        lines.append("\n")
+    # Detect Quality Alerts
+    quality_alerts = []
+    for p in profiles:
+        if p["completely_blank_rows"] > 0:
+            quality_alerts.append(f"- ⚠️ **Table `{p['table_name']}`**: Detected {p['completely_blank_rows']} completely empty rows. **Must filter in Power Query** (`Table.SelectRows`) to avoid `DataFormat.Error` and broken 1:* relationships.")
+        for c in p["columns"]:
+            if c["null_count"] > 0 and c["column"].lower().endswith("_id"):
+                quality_alerts.append(f"- ⚠️ **Table `{p['table_name']}`, Column `{c['column']}`**: Contains {c['null_count']} null/blank ID values. May break relationship cardinality.")
+
+    lines.append("## 4. Data Quality & ETL Recommendations\n")
+    if quality_alerts:
+        for alert in quality_alerts:
+            lines.append(alert)
+    else:
+        lines.append("- ✅ No severe blank rows or orphan key anomalies detected.")
+    lines.append("- 💡 **Excel Sheet Loading**: Use `Kind=\"Sheet\"` with `Table.PromoteHeaders(..., [PromoteAllScalars=true])` if data is stored in standard worksheets.")
+    lines.append("- 💡 **Parameterization**: Define a `FilePath` parameter query `meta [IsParameterQuery=true]` for zero-friction portability.")
+    lines.append("\n")
 
     report_content = "\n".join(lines)
     

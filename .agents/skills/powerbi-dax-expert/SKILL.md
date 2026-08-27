@@ -35,14 +35,17 @@ RETURN
   - ✅ `CALCULATE([Total Sales], KEEPFILTERS(Fact_Sales[Discount_Rate] > 0))` (Pushes predicate to column storage engine).
 - **Use Explicit Measures**: Never aggregate naked columns inside visual buckets (`Sum of list_price`). Always reference explicit measures `[Total Net Revenue]`.
 
-## Measure Organization
-All measures must be stored in the dedicated `_Measures` table organized into structured Display Folders:
-- `01. Financial & Revenue KPIs`
-- `02. Volume & Orders`
-- `03. Time Intelligence (YoY / MoM / YTD)`
-- `04. Customer Analytics & RFM`
-- `05. Operations & Inventory`
-- `06. Dynamic Titles & Formatting`
+## Measure Organization & Schema Synchronization
+1. **Dedicated Measure Table**: All measures must be stored in the dedicated `_Measures` table organized into structured Display Folders:
+   - `01. Financial & Revenue KPIs`
+   - `02. Volume & Orders`
+   - `03. Time Intelligence (YoY / MoM / YTD)`
+   - `04. Customer Analytics & RFM`
+   - `05. Operations & Inventory`
+   - `06. Dynamic Titles & Formatting`
+2. **Strict Naming Synchronization with Visuals**:
+   - Every measure name defined in DAX / TMDL / `model.bim` must match character-for-character with visual bindings in `report.json`.
+   - Never rename a measure in the model without updating visual container `prototypeQuery` bindings, or visuals will break with *"Can't display this visual / Table '_Measures' does not contain measure"*.
 
 ## Reference Guides & Scripts
 - Complete DAX Measure Library: [dax_patterns.md](./references/dax_patterns.md)

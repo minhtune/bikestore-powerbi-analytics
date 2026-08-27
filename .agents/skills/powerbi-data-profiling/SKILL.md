@@ -27,15 +27,16 @@ Check the following dimensions for each table:
 2. **Key Candidates**: Identify Unique Primary Keys (PK) and Foreign Keys (FK) linking tables.
 3. **Cardinality**: Check distinct value counts to detect low-cardinality slicer dimensions vs high-cardinality attributes.
 4. **Data Types**: Verify numeric formats (currency, quantity, discount rates), dates (order_date, shipped_date), and text fields.
-5. **Data Quality Checks**:
-   - Missing/Null values (e.g., missing phone numbers, blank shipped dates for unfulfilled orders).
-   - Value distributions (min, max, median, negative values, discounts outside [0, 1]).
-   - Orphaned records (FK in fact table not present in dimension table).
 
-### 3. Output Requirements
+### 3. Data Quality Checks & Common Traps
+- **Trailing Blank Rows**: Excel sheets frequently contain empty formatted rows that produce blank strings `""` or `null`s, breaking numeric conversions (`DataFormat.Error`) and destroying 1:* relationship cardinality.
+- **Excel Sheet vs Table Structure**: Check if data is stored in standard Worksheets (`Kind="Sheet"`) or official Excel Tables (`Kind="Table"`) to prevent `KeyNotFoundException` during Power Query navigation.
+- **Key Integrity**: Ensure primary key candidates have 0 null/blank values and 100% uniqueness before modeling.
+
+### 4. Output Requirements
 Always provide the user with:
 - **Entity Relationship Summary**: Tables, row counts, and primary-foreign key links.
 - **Fact vs Dimension Classification**:
   - **Fact Candidates**: Tables containing transactional metrics, events, and numerical measures (`orders`, `order_items`, `stocks`).
   - **Dimension Candidates**: Tables containing descriptive attributes, master data, hierarchies (`customers`, `products`, `stores`, `staffs`, `categories`, `brands`).
-- **Data Quality Alerts**: Warnings about nulls, date inconsistencies, or necessary transformations.
+- **Data Quality Alerts & ETL Guidance**: Warnings about trailing blank rows, Sheet vs Table navigation, parameterization recommendations, and date parsing anomalies.

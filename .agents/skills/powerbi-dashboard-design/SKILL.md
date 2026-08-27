@@ -41,7 +41,15 @@ This skill guides the design of aesthetic, user-friendly, and actionable Power B
 | Multi-attribute detailed table | **Matrix** with conditional formatting / data bars | Unformatted raw table |
 | Correlation / Outliers | **Scatter Plot** | Clustered column |
 
+### 4. PBIP/PBIR Implementation & Error Prevention
+When translating designs to code (`report.json` / PBIR):
+- **Exact Schema Alignment**: Visual field bindings must match exact column/measure names in the model (e.g. `Brand_Name` instead of `Brand Name`).
+- **Stringified JSON in PBIP v1.0**: The `config` property of each `visualContainer` in `report.json` must be a JSON-escaped string.
+- **UTF-8 No BOM**: Always write report JSON files without BOM.
+- **Native Automation**: Provide native PowerShell `.ps1` alongside Python scripts for friction-free execution on Windows.
+
 ## Theme & Blueprint Resources
 - Power BI Theme JSON: [powerbi_theme.json](./resources/powerbi_theme.json)
 - Dashboard Layout Architecture: [layout_and_ui_ux.md](./references/layout_and_ui_ux.md)
 - Export Interactive Blueprint: `python3 .agents/skills/powerbi-dashboard-design/scripts/export_blueprint.py`
+- Report Authoring & PBIP Troubleshooting: [powerbi-report-authoring](../powerbi-report-authoring/SKILL.md)
