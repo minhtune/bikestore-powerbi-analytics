@@ -1,0 +1,6 @@
+{
+  "name": "powerbi-analytics",
+  "displayName": "Power BI End-to-End Analytics & Dashboard Kit",
+  "version": "1.0.0",
+  "description": "Comprehensive Power BI plugin containing data profiling, Kimball star schema data modeling, Power Query (M) transformations, DAX measure engineering, and UI/UX dashboard design blueprints."
+}

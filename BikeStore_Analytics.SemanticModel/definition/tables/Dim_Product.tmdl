@@ -1,0 +1,78 @@
+table Dim_Product
+	lineageTag: 81e48810-7212-4214-bf03-882299300001
+
+	column Product_ID
+		dataType: int64
+		isKey
+		formatString: 0
+		lineageTag: 81e48810-7212-4214-bf03-882299300002
+		summarizeBy: none
+		sourceColumn: Product_ID
+
+	column Product_Name
+		dataType: string
+		lineageTag: 81e48810-7212-4214-bf03-882299300003
+		summarizeBy: none
+		sourceColumn: Product_Name
+
+	column Brand_ID
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 81e48810-7212-4214-bf03-882299300004
+		summarizeBy: none
+		sourceColumn: Brand_ID
+
+	column Brand_Name
+		dataType: string
+		lineageTag: 81e48810-7212-4214-bf03-882299300005
+		summarizeBy: none
+		sourceColumn: Brand_Name
+
+	column Category_ID
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 81e48810-7212-4214-bf03-882299300006
+		summarizeBy: none
+		sourceColumn: Category_ID
+
+	column Category_Name
+		dataType: string
+		lineageTag: 81e48810-7212-4214-bf03-882299300007
+		summarizeBy: none
+		sourceColumn: Category_Name
+
+	column Model_Year
+		dataType: int64
+		formatString: 0
+		lineageTag: 81e48810-7212-4214-bf03-882299300008
+		summarizeBy: none
+		sourceColumn: Model_Year
+
+	column List_Price
+		dataType: double
+		formatString: "$#,##0.00"
+		lineageTag: 81e48810-7212-4214-bf03-882299300009
+		summarizeBy: average
+		sourceColumn: List_Price
+
+	partition Dim_Product = m
+		mode: import
+		source = 
+			let
+				Source = Excel.Workbook(File.Contents("BikeStore.xlsx"), null, true),
+				products_Table = Source{[Item="products",Kind="Table"]}[Data],
+				#"Promoted Products" = Table.PromoteHeaders(products_Table, [PromoteAllScalars=true]),
+				brands_Table = Source{[Item="brands",Kind="Table"]}[Data],
+				#"Promoted Brands" = Table.PromoteHeaders(brands_Table, [PromoteAllScalars=true]),
+				#"Merged Brands" = Table.NestedJoin(#"Promoted Products", {"brand_id"}, #"Promoted Brands", {"brand_id"}, "BrandTable", JoinKind.LeftOuter),
+				#"Expanded Brands" = Table.ExpandTableColumn(#"Merged Brands", "BrandTable", {"brand_name"}, {"Brand_Name"}),
+				categories_Table = Source{[Item="categories",Kind="Table"]}[Data],
+				#"Promoted Categories" = Table.PromoteHeaders(categories_Table, [PromoteAllScalars=true]),
+				#"Merged Categories" = Table.NestedJoin(#"Expanded Brands", {"category_id"}, #"Promoted Categories", {"category_id"}, "CatTable", JoinKind.LeftOuter),
+				#"Expanded Categories" = Table.ExpandTableColumn(#"Merged Categories", "CatTable", {"category_name"}, {"Category_Name"}),
+				#"Renamed Columns" = Table.RenameColumns(#"Expanded Categories", {{"product_id", "Product_ID"}, {"product_name", "Product_Name"}, {"brand_id", "Brand_ID"}, {"category_id", "Category_ID"}, {"model_year", "Model_Year"}, {"list_price", "List_Price"}}),
+				#"Changed Types" = Table.TransformColumnTypes(#"Renamed Columns", {{"Product_ID", Int64.Type}, {"Product_Name", type text}, {"Brand_ID", Int64.Type}, {"Brand_Name", type text}, {"Category_ID", Int64.Type}, {"Category_Name", type text}, {"Model_Year", Int64.Type}, {"List_Price", type number}})
+			in
+				#"Changed Types"

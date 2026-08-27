@@ -1,0 +1,68 @@
+table Dim_Customer
+	lineageTag: 81e48810-7212-4214-bf03-882299400001
+
+	column Customer_ID
+		dataType: int64
+		isKey
+		formatString: 0
+		lineageTag: 81e48810-7212-4214-bf03-882299400002
+		summarizeBy: none
+		sourceColumn: Customer_ID
+
+	column Customer_Name
+		dataType: string
+		lineageTag: 81e48810-7212-4214-bf03-882299400003
+		summarizeBy: none
+		sourceColumn: Customer_Name
+
+	column Email
+		dataType: string
+		lineageTag: 81e48810-7212-4214-bf03-882299400004
+		summarizeBy: none
+		sourceColumn: Email
+
+	column Phone
+		dataType: string
+		lineageTag: 81e48810-7212-4214-bf03-882299400005
+		summarizeBy: none
+		sourceColumn: Phone
+
+	column Street
+		dataType: string
+		lineageTag: 81e48810-7212-4214-bf03-882299400006
+		summarizeBy: none
+		sourceColumn: Street
+
+	column City
+		dataType: string
+		dataCategory: City
+		lineageTag: 81e48810-7212-4214-bf03-882299400007
+		summarizeBy: none
+		sourceColumn: City
+
+	column State
+		dataType: string
+		dataCategory: StateOrProvince
+		lineageTag: 81e48810-7212-4214-bf03-882299400008
+		summarizeBy: none
+		sourceColumn: State
+
+	column Zip_Code
+		dataType: string
+		dataCategory: PostalCode
+		lineageTag: 81e48810-7212-4214-bf03-882299400009
+		summarizeBy: none
+		sourceColumn: Zip_Code
+
+	partition Dim_Customer = m
+		mode: import
+		source = 
+			let
+				Source = Excel.Workbook(File.Contents("BikeStore.xlsx"), null, true),
+				customers_Table = Source{[Item="customers",Kind="Table"]}[Data],
+				#"Promoted Headers" = Table.PromoteHeaders(customers_Table, [PromoteAllScalars=true]),
+				#"Added FullName" = Table.AddColumn(#"Promoted Headers", "Customer_Name", each [first_name] & " " & [last_name], type text),
+				#"Renamed Columns" = Table.RenameColumns(#"Added FullName", {{"customer_id", "Customer_ID"}, {"email", "Email"}, {"phone", "Phone"}, {"street", "Street"}, {"city", "City"}, {"state", "State"}, {"zip_code", "Zip_Code"}}),
+				#"Changed Types" = Table.TransformColumnTypes(#"Renamed Columns", {{"Customer_ID", Int64.Type}, {"Customer_Name", type text}, {"Email", type text}, {"Phone", type text}, {"Street", type text}, {"City", type text}, {"State", type text}, {"Zip_Code", type text}})
+			in
+				#"Changed Types"

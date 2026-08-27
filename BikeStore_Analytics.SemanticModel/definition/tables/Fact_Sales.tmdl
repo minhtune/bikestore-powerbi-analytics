@@ -1,0 +1,138 @@
+table Fact_Sales
+	lineageTag: 81e48810-7212-4214-bf03-882299700001
+
+	column Order_ID
+		dataType: int64
+		formatString: 0
+		lineageTag: 81e48810-7212-4214-bf03-882299700002
+		summarizeBy: count
+		sourceColumn: Order_ID
+
+	column Line_Item_ID
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 81e48810-7212-4214-bf03-882299700003
+		summarizeBy: none
+		sourceColumn: Line_Item_ID
+
+	column Customer_ID
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 81e48810-7212-4214-bf03-882299700004
+		summarizeBy: none
+		sourceColumn: Customer_ID
+
+	column Store_ID
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 81e48810-7212-4214-bf03-882299700005
+		summarizeBy: none
+		sourceColumn: Store_ID
+
+	column Staff_ID
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 81e48810-7212-4214-bf03-882299700006
+		summarizeBy: none
+		sourceColumn: Staff_ID
+
+	column Product_ID
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 81e48810-7212-4214-bf03-882299700007
+		summarizeBy: none
+		sourceColumn: Product_ID
+
+	column Order_Date
+		dataType: dateTime
+		formatString: yyyy-MM-dd
+		lineageTag: 81e48810-7212-4214-bf03-882299700008
+		summarizeBy: none
+		sourceColumn: Order_Date
+
+	column Required_Date
+		dataType: dateTime
+		formatString: yyyy-MM-dd
+		lineageTag: 81e48810-7212-4214-bf03-882299700009
+		summarizeBy: none
+		sourceColumn: Required_Date
+
+	column Shipped_Date
+		dataType: dateTime
+		formatString: yyyy-MM-dd
+		lineageTag: 81e48810-7212-4214-bf03-882299700010
+		summarizeBy: none
+		sourceColumn: Shipped_Date
+
+	column Order_Status
+		dataType: string
+		lineageTag: 81e48810-7212-4214-bf03-882299700011
+		summarizeBy: none
+		sourceColumn: Order_Status
+
+	column Quantity
+		dataType: int64
+		formatString: #,##0
+		lineageTag: 81e48810-7212-4214-bf03-882299700012
+		summarizeBy: sum
+		sourceColumn: Quantity
+
+	column Unit_Price
+		dataType: double
+		formatString: "$#,##0.00"
+		lineageTag: 81e48810-7212-4214-bf03-882299700013
+		summarizeBy: average
+		sourceColumn: Unit_Price
+
+	column Discount_Rate
+		dataType: double
+		formatString: 0.0%
+		lineageTag: 81e48810-7212-4214-bf03-882299700014
+		summarizeBy: average
+		sourceColumn: Discount_Rate
+
+	column Gross_Amount
+		dataType: double
+		formatString: "$#,##0.00"
+		lineageTag: 81e48810-7212-4214-bf03-882299700015
+		summarizeBy: sum
+		sourceColumn: Gross_Amount
+
+	column Discount_Amount
+		dataType: double
+		formatString: "$#,##0.00"
+		lineageTag: 81e48810-7212-4214-bf03-882299700016
+		summarizeBy: sum
+		sourceColumn: Discount_Amount
+
+	column Net_Amount
+		dataType: double
+		formatString: "$#,##0.00"
+		lineageTag: 81e48810-7212-4214-bf03-882299700017
+		summarizeBy: sum
+		sourceColumn: Net_Amount
+
+	partition Fact_Sales = m
+		mode: import
+		source = 
+			let
+				Source = Excel.Workbook(File.Contents("BikeStore.xlsx"), null, true),
+				order_items_Table = Source{[Item="order_items",Kind="Table"]}[Data],
+				#"Promoted Items" = Table.PromoteHeaders(order_items_Table, [PromoteAllScalars=true]),
+				orders_Table = Source{[Item="orders",Kind="Table"]}[Data],
+				#"Promoted Orders" = Table.PromoteHeaders(orders_Table, [PromoteAllScalars=true]),
+				#"Merged Orders" = Table.NestedJoin(#"Promoted Items", {"order_id"}, #"Promoted Orders", {"order_id"}, "OrderHeader", JoinKind.Inner),
+				#"Expanded Orders" = Table.ExpandTableColumn(#"Merged Orders", "OrderHeader", {"customer_id", "order_status", "order_date", "required_date", "shipped_date", "store_id", "staff_id"}, {"Customer_ID", "Order_Status_Code", "Order_Date", "Required_Date", "Shipped_Date", "Store_ID", "Staff_ID"}),
+				#"Added Status" = Table.AddColumn(#"Expanded Orders", "Order_Status", each if [Order_Status_Code] = 1 then "Pending" else if [Order_Status_Code] = 2 then "Processing" else if [Order_Status_Code] = 3 then "Rejected" else if [Order_Status_Code] = 4 then "Completed" else "Unknown", type text),
+				#"Added Gross" = Table.AddColumn(#"Added Status", "Gross_Amount", each [quantity] * [list_price], type number),
+				#"Added Disc" = Table.AddColumn(#"Added Gross", "Discount_Amount", each [Gross_Amount] * [discount], type number),
+				#"Added Net" = Table.AddColumn(#"Added Disc", "Net_Amount", each [Gross_Amount] - [Discount_Amount], type number),
+				#"Renamed Cols" = Table.RenameColumns(#"Added Net", {{"order_id", "Order_ID"}, {"item_id", "Line_Item_ID"}, {"product_id", "Product_ID"}, {"quantity", "Quantity"}, {"list_price", "Unit_Price"}, {"discount", "Discount_Rate"}}),
+				#"Changed Types" = Table.TransformColumnTypes(#"Renamed Cols", {{"Order_ID", Int64.Type}, {"Line_Item_ID", Int64.Type}, {"Product_ID", Int64.Type}, {"Customer_ID", Int64.Type}, {"Store_ID", Int64.Type}, {"Staff_ID", Int64.Type}, {"Order_Status", type text}, {"Order_Date", type date}, {"Required_Date", type date}, {"Shipped_Date", type date}, {"Quantity", Int64.Type}, {"Unit_Price", type number}, {"Discount_Rate", type number}, {"Gross_Amount", type number}, {"Discount_Amount", type number}, {"Net_Amount", type number}})
+			in
+				#"Changed Types"

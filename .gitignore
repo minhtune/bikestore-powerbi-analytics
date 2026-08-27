@@ -1,0 +1,9 @@
+# Power BI Desktop local cache & settings
+.pbi/localSettings.json
+.pbi/cache.abf
+*.tmp
+
+# OS & Python
+.DS_Store
+__pycache__/
+*.pyc

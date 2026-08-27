@@ -1,0 +1,37 @@
+relationship rel_Sales_Customer
+	fromColumn: Fact_Sales.Customer_ID
+	toColumn: Dim_Customer.Customer_ID
+
+relationship rel_Sales_Product
+	fromColumn: Fact_Sales.Product_ID
+	toColumn: Dim_Product.Product_ID
+
+relationship rel_Sales_Store
+	fromColumn: Fact_Sales.Store_ID
+	toColumn: Dim_Store.Store_ID
+
+relationship rel_Sales_Staff
+	fromColumn: Fact_Sales.Staff_ID
+	toColumn: Dim_Staff.Staff_ID
+
+relationship rel_Sales_OrderDate
+	fromColumn: Fact_Sales.Order_Date
+	toColumn: Dim_Date.Date
+
+relationship rel_Sales_ShippedDate
+	isActive: false
+	fromColumn: Fact_Sales.Shipped_Date
+	toColumn: Dim_Date.Date
+
+relationship rel_Sales_RequiredDate
+	isActive: false
+	fromColumn: Fact_Sales.Required_Date
+	toColumn: Dim_Date.Date
+
+relationship rel_Inventory_Store
+	fromColumn: Fact_Inventory.Store_ID
+	toColumn: Dim_Store.Store_ID
+
+relationship rel_Inventory_Product
+	fromColumn: Fact_Inventory.Product_ID
+	toColumn: Dim_Product.Product_ID

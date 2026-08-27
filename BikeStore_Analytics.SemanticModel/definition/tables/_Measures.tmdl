@@ -1,0 +1,97 @@
+table _Measures
+	lineageTag: 71e48810-7212-4214-bf03-882299100001
+
+	measure 'Total Gross Revenue' = SUMX(Fact_Sales, Fact_Sales[Quantity] * Fact_Sales[Unit_Price])
+		formatString: "$#,##0"
+		displayFolder: 01. Financial & Revenue KPIs
+		lineageTag: 71e48810-7212-4214-bf03-882299100002
+
+	measure 'Total Discount Amount' = SUMX(Fact_Sales, Fact_Sales[Quantity] * Fact_Sales[Unit_Price] * Fact_Sales[Discount_Rate])
+		formatString: "$#,##0"
+		displayFolder: 01. Financial & Revenue KPIs
+		lineageTag: 71e48810-7212-4214-bf03-882299100003
+
+	measure 'Total Net Revenue' = [Total Gross Revenue] - [Total Discount Amount]
+		formatString: "$#,##0"
+		displayFolder: 01. Financial & Revenue KPIs
+		lineageTag: 71e48810-7212-4214-bf03-882299100004
+
+	measure 'Average Discount %' = DIVIDE([Total Discount Amount], [Total Gross Revenue], 0)
+		formatString: 0.0%
+		displayFolder: 01. Financial & Revenue KPIs
+		lineageTag: 71e48810-7212-4214-bf03-882299100005
+
+	measure 'Total Orders' = DISTINCTCOUNT(Fact_Sales[Order_ID])
+		formatString: #,##0
+		displayFolder: 02. Volume & Orders
+		lineageTag: 71e48810-7212-4214-bf03-882299100006
+
+	measure 'Total Units Sold' = SUM(Fact_Sales[Quantity])
+		formatString: #,##0
+		displayFolder: 02. Volume & Orders
+		lineageTag: 71e48810-7212-4214-bf03-882299100007
+
+	measure 'Average Order Value' = DIVIDE([Total Net Revenue], [Total Orders], BLANK())
+		formatString: "$#,##0.00"
+		displayFolder: 02. Volume & Orders
+		lineageTag: 71e48810-7212-4214-bf03-882299100008
+
+	measure 'Units Per Order' = DIVIDE([Total Units Sold], [Total Orders], BLANK())
+		formatString: 0.0
+		displayFolder: 02. Volume & Orders
+		lineageTag: 71e48810-7212-4214-bf03-882299100009
+
+	measure 'Net Revenue SPLY' = CALCULATE([Total Net Revenue], SAMEPERIODLASTYEAR(Dim_Date[Date]))
+		formatString: "$#,##0"
+		displayFolder: 03. Time Intelligence (YoY / MoM / YTD)
+		lineageTag: 71e48810-7212-4214-bf03-882299100010
+
+	measure 'YoY Net Revenue Delta' = VAR CurrentRev = [Total Net Revenue] VAR PriorRev = [Net Revenue SPLY] RETURN IF(NOT ISBLANK(CurrentRev) && NOT ISBLANK(PriorRev), CurrentRev - PriorRev, BLANK())
+		formatString: "$#,##0"
+		displayFolder: 03. Time Intelligence (YoY / MoM / YTD)
+		lineageTag: 71e48810-7212-4214-bf03-882299100011
+
+	measure 'YoY Net Revenue Growth %' = VAR CurrentRev = [Total Net Revenue] VAR PriorRev = [Net Revenue SPLY] RETURN DIVIDE(CurrentRev - PriorRev, PriorRev, BLANK())
+		formatString: "+0.0%;-0.0%;0.0%"
+		displayFolder: 03. Time Intelligence (YoY / MoM / YTD)
+		lineageTag: 71e48810-7212-4214-bf03-882299100012
+
+	measure 'Net Revenue YTD' = CALCULATE([Total Net Revenue], DATESYTD(Dim_Date[Date]))
+		formatString: "$#,##0"
+		displayFolder: 03. Time Intelligence (YoY / MoM / YTD)
+		lineageTag: 71e48810-7212-4214-bf03-882299100013
+
+	measure 'Total Active Customers' = DISTINCTCOUNT(Fact_Sales[Customer_ID])
+		formatString: #,##0
+		displayFolder: 04. Customer Analytics
+		lineageTag: 71e48810-7212-4214-bf03-882299100014
+
+	measure 'Revenue Per Customer' = DIVIDE([Total Net Revenue], [Total Active Customers], BLANK())
+		formatString: "$#,##0.00"
+		displayFolder: 04. Customer Analytics
+		lineageTag: 71e48810-7212-4214-bf03-882299100015
+
+	measure 'Total Stock Quantity' = SUM(Fact_Inventory[Quantity_In_Stock])
+		formatString: #,##0
+		displayFolder: 05. Inventory & Supply Chain
+		lineageTag: 71e48810-7212-4214-bf03-882299100016
+
+	measure 'Total Stock Value' = SUMX(Fact_Inventory, Fact_Inventory[Quantity_In_Stock] * RELATED(Dim_Product[List_Price]))
+		formatString: "$#,##0"
+		displayFolder: 05. Inventory & Supply Chain
+		lineageTag: 71e48810-7212-4214-bf03-882299100017
+
+	column MeasurePlaceholder
+		dataType: string
+		isHidden
+		lineageTag: 71e48810-7212-4214-bf03-882299100018
+		summarizeBy: none
+		sourceColumn: MeasurePlaceholder
+
+	partition _Measures = m
+		mode: import
+		source = 
+			let
+				Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [MeasurePlaceholder = _t])
+			in
+				Source

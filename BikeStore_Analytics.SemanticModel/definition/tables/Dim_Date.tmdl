@@ -1,0 +1,86 @@
+table Dim_Date
+	lineageTag: 81e48810-7212-4214-bf03-882299200001
+	dataCategory: Time
+
+	column Date
+		dataType: dateTime
+		isKey
+		formatString: yyyy-MM-dd
+		lineageTag: 81e48810-7212-4214-bf03-882299200002
+		summarizeBy: none
+		sourceColumn: Date
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: 81e48810-7212-4214-bf03-882299200003
+		summarizeBy: none
+		sourceColumn: Year
+
+	column Quarter
+		dataType: string
+		lineageTag: 81e48810-7212-4214-bf03-882299200004
+		summarizeBy: none
+		sourceColumn: Quarter
+
+	column Month
+		dataType: int64
+		formatString: 0
+		lineageTag: 81e48810-7212-4214-bf03-882299200005
+		summarizeBy: none
+		sourceColumn: Month
+
+	column MonthName
+		dataType: string
+		sortByColumn: Month
+		lineageTag: 81e48810-7212-4214-bf03-882299200006
+		summarizeBy: none
+		sourceColumn: MonthName
+
+	column YearMonth
+		dataType: string
+		sortByColumn: YearMonthSort
+		lineageTag: 81e48810-7212-4214-bf03-882299200007
+		summarizeBy: none
+		sourceColumn: YearMonth
+
+	column YearMonthSort
+		dataType: int64
+		isHidden
+		lineageTag: 81e48810-7212-4214-bf03-882299200008
+		summarizeBy: none
+		sourceColumn: YearMonthSort
+
+	column DayOfWeek
+		dataType: string
+		lineageTag: 81e48810-7212-4214-bf03-882299200009
+		summarizeBy: none
+		sourceColumn: DayOfWeek
+
+	column IsWeekend
+		dataType: int64
+		formatString: 0
+		lineageTag: 81e48810-7212-4214-bf03-882299200010
+		summarizeBy: none
+		sourceColumn: IsWeekend
+
+	partition Dim_Date = m
+		mode: import
+		source = 
+			let
+				StartDate = #date(2016, 1, 1),
+				EndDate = #date(2019, 12, 31),
+				DayCount = Duration.Days(EndDate - StartDate) + 1,
+				DateList = List.Dates(StartDate, DayCount, #duration(1, 0, 0, 0)),
+				#"Converted to Table" = Table.FromList(DateList, Splitter.SplitByNothing(), {"Date"}, null, ExtraValues.Error),
+				#"Changed Type" = Table.TransformColumnTypes(#"Converted to Table", {{"Date", type date}}),
+				#"Added Year" = Table.AddColumn(#"Changed Type", "Year", each Date.Year([Date]), Int64.Type),
+				#"Added Quarter" = Table.AddColumn(#"Added Year", "Quarter", each "Q" & Text.From(Date.QuarterOfYear([Date])), type text),
+				#"Added Month" = Table.AddColumn(#"Added Quarter", "Month", each Date.Month([Date]), Int64.Type),
+				#"Added Month Name" = Table.AddColumn(#"Added Month", "MonthName", each Date.MonthName([Date]), type text),
+				#"Added YearMonth" = Table.AddColumn(#"Added Month Name", "YearMonth", each Date.ToText([Date], "yyyy-MM"), type text),
+				#"Added YearMonthSort" = Table.AddColumn(#"Added YearMonth", "YearMonthSort", each Date.Year([Date]) * 100 + Date.Month([Date]), Int64.Type),
+				#"Added DayOfWeek" = Table.AddColumn(#"Added YearMonthSort", "DayOfWeek", each Date.DayOfWeekName([Date]), type text),
+				#"Added IsWeekend" = Table.AddColumn(#"Added DayOfWeek", "IsWeekend", each if Date.DayOfWeek([Date], Day.Monday) >= 5 then 1 else 0, Int64.Type)
+			in
+				#"Added IsWeekend"

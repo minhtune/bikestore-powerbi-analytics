@@ -1,0 +1,55 @@
+table Dim_Staff
+	lineageTag: 81e48810-7212-4214-bf03-882299600001
+
+	column Staff_ID
+		dataType: int64
+		isKey
+		formatString: 0
+		lineageTag: 81e48810-7212-4214-bf03-882299600002
+		summarizeBy: none
+		sourceColumn: Staff_ID
+
+	column Staff_Name
+		dataType: string
+		lineageTag: 81e48810-7212-4214-bf03-882299600003
+		summarizeBy: none
+		sourceColumn: Staff_Name
+
+	column Email
+		dataType: string
+		lineageTag: 81e48810-7212-4214-bf03-882299600004
+		summarizeBy: none
+		sourceColumn: Email
+
+	column Phone
+		dataType: string
+		lineageTag: 81e48810-7212-4214-bf03-882299600005
+		summarizeBy: none
+		sourceColumn: Phone
+
+	column Active_Status
+		dataType: int64
+		formatString: 0
+		lineageTag: 81e48810-7212-4214-bf03-882299600006
+		summarizeBy: none
+		sourceColumn: Active_Status
+
+	column Store_ID
+		dataType: int64
+		formatString: 0
+		lineageTag: 81e48810-7212-4214-bf03-882299600007
+		summarizeBy: none
+		sourceColumn: Store_ID
+
+	partition Dim_Staff = m
+		mode: import
+		source = 
+			let
+				Source = Excel.Workbook(File.Contents("BikeStore.xlsx"), null, true),
+				staffs_Table = Source{[Item="staffs",Kind="Table"]}[Data],
+				#"Promoted Headers" = Table.PromoteHeaders(staffs_Table, [PromoteAllScalars=true]),
+				#"Added FullName" = Table.AddColumn(#"Promoted Headers", "Staff_Name", each [first_name] & " " & [last_name], type text),
+				#"Renamed Columns" = Table.RenameColumns(#"Added FullName", {{"staff_id", "Staff_ID"}, {"email", "Email"}, {"phone", "Phone"}, {"active", "Active_Status"}, {"store_id", "Store_ID"}}),
+				#"Changed Types" = Table.TransformColumnTypes(#"Renamed Columns", {{"Staff_ID", Int64.Type}, {"Staff_Name", type text}, {"Email", type text}, {"Phone", type text}, {"Active_Status", Int64.Type}, {"Store_ID", Int64.Type}})
+			in
+				#"Changed Types"

@@ -1,0 +1,61 @@
+table Dim_Store
+	lineageTag: 81e48810-7212-4214-bf03-882299500001
+
+	column Store_ID
+		dataType: int64
+		isKey
+		formatString: 0
+		lineageTag: 81e48810-7212-4214-bf03-882299500002
+		summarizeBy: none
+		sourceColumn: Store_ID
+
+	column Store_Name
+		dataType: string
+		lineageTag: 81e48810-7212-4214-bf03-882299500003
+		summarizeBy: none
+		sourceColumn: Store_Name
+
+	column Phone
+		dataType: string
+		lineageTag: 81e48810-7212-4214-bf03-882299500004
+		summarizeBy: none
+		sourceColumn: Phone
+
+	column Email
+		dataType: string
+		lineageTag: 81e48810-7212-4214-bf03-882299500005
+		summarizeBy: none
+		sourceColumn: Email
+
+	column City
+		dataType: string
+		dataCategory: City
+		lineageTag: 81e48810-7212-4214-bf03-882299500006
+		summarizeBy: none
+		sourceColumn: City
+
+	column State
+		dataType: string
+		dataCategory: StateOrProvince
+		lineageTag: 81e48810-7212-4214-bf03-882299500007
+		summarizeBy: none
+		sourceColumn: State
+
+	column Zip_Code
+		dataType: string
+		dataCategory: PostalCode
+		lineageTag: 81e48810-7212-4214-bf03-882299500008
+		summarizeBy: none
+		sourceColumn: Zip_Code
+
+	partition Dim_Store = m
+		mode: import
+		source = 
+			let
+				Source = Excel.Workbook(File.Contents("BikeStore.xlsx"), null, true),
+				stores_Table = Source{[Item="stores",Kind="Table"]}[Data],
+				#"Promoted Headers" = Table.PromoteHeaders(stores_Table, [PromoteAllScalars=true]),
+				#"Renamed Columns" = Table.RenameColumns(#"Promoted Headers", {{"store_id", "Store_ID"}, {"store_name", "Store_Name"}, {"phone", "Phone"}, {"email", "Email"}, {"street", "Street"}, {"city", "City"}, {"state", "State"}, {"zip_code", "Zip_Code"}}),
+				#"Changed Types" = Table.TransformColumnTypes(#"Renamed Columns", {{"Store_ID", Int64.Type}, {"Store_Name", type text}, {"Phone", type text}, {"Email", type text}, {"Street", type text}, {"City", type text}, {"State", type text}, {"Zip_Code", type text}})
+			in
+				#"Changed Types"
