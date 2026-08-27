@@ -59,9 +59,10 @@ table Dim_Customer
 		source = 
 			let
 				Source = Excel.Workbook(File.Contents(FilePath), null, true),
-				customers_Table = Source{[Item="customers",Kind="Table"]}[Data],
+				customers_Table = Source{[Item="customers",Kind="Sheet"]}[Data],
 				#"Promoted Headers" = Table.PromoteHeaders(customers_Table, [PromoteAllScalars=true]),
-				#"Added FullName" = Table.AddColumn(#"Promoted Headers", "Customer_Name", each [first_name] & " " & [last_name], type text),
+				#"Filtered Blank Rows" = Table.SelectRows(#"Promoted Headers", each [customer_id] <> null and [customer_id] <> ""),
+				#"Added FullName" = Table.AddColumn(#"Filtered Blank Rows", "Customer_Name", each [first_name] & " " & [last_name], type text),
 				#"Renamed Columns" = Table.RenameColumns(#"Added FullName", {{"customer_id", "Customer_ID"}, {"email", "Email"}, {"phone", "Phone"}, {"street", "Street"}, {"city", "City"}, {"state", "State"}, {"zip_code", "Zip_Code"}}),
 				#"Changed Types" = Table.TransformColumnTypes(#"Renamed Columns", {{"Customer_ID", Int64.Type}, {"Customer_Name", type text}, {"Email", type text}, {"Phone", type text}, {"Street", type text}, {"City", type text}, {"State", type text}, {"Zip_Code", type text}})
 			in

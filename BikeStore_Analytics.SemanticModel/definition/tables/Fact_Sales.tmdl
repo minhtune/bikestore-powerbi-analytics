@@ -122,11 +122,13 @@ table Fact_Sales
 		source = 
 			let
 				Source = Excel.Workbook(File.Contents(FilePath), null, true),
-				order_items_Table = Source{[Item="order_items",Kind="Table"]}[Data],
+				order_items_Table = Source{[Item="order_items",Kind="Sheet"]}[Data],
 				#"Promoted Items" = Table.PromoteHeaders(order_items_Table, [PromoteAllScalars=true]),
-				orders_Table = Source{[Item="orders",Kind="Table"]}[Data],
+				#"Filtered Items" = Table.SelectRows(#"Promoted Items", each [order_id] <> null and [order_id] <> ""),
+				orders_Table = Source{[Item="orders",Kind="Sheet"]}[Data],
 				#"Promoted Orders" = Table.PromoteHeaders(orders_Table, [PromoteAllScalars=true]),
-				#"Merged Orders" = Table.NestedJoin(#"Promoted Items", {"order_id"}, #"Promoted Orders", {"order_id"}, "OrderHeader", JoinKind.Inner),
+				#"Filtered Orders" = Table.SelectRows(#"Promoted Orders", each [order_id] <> null and [order_id] <> ""),
+				#"Merged Orders" = Table.NestedJoin(#"Filtered Items", {"order_id"}, #"Filtered Orders", {"order_id"}, "OrderHeader", JoinKind.Inner),
 				#"Expanded Orders" = Table.ExpandTableColumn(#"Merged Orders", "OrderHeader", {"customer_id", "order_status", "order_date", "required_date", "shipped_date", "store_id", "staff_id"}, {"Customer_ID", "Order_Status_Code", "Order_Date", "Required_Date", "Shipped_Date", "Store_ID", "Staff_ID"}),
 				#"Added Status" = Table.AddColumn(#"Expanded Orders", "Order_Status", each if [Order_Status_Code] = 1 then "Pending" else if [Order_Status_Code] = 2 then "Processing" else if [Order_Status_Code] = 3 then "Rejected" else if [Order_Status_Code] = 4 then "Completed" else "Unknown", type text),
 				#"Added Gross" = Table.AddColumn(#"Added Status", "Gross_Amount", each [quantity] * [list_price], type number),

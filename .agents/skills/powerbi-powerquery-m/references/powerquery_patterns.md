@@ -1,8 +1,20 @@
 # Power Query (M) Script Library & Design Patterns
 
-## 1. Dynamic Calendar (Date Dimension) in M
+## 1. Parameterized Data Source Setup
 
-This M query dynamically scans the date range from your Fact tables and generates an enterprise Date dimension without external dependencies.
+Always establish a parameter query `FilePath` so users can retarget their local files with one click:
+```powerquery
+let
+    FilePath = "C:\Users\Username\Data\BikeStore.xlsx" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+in
+    FilePath
+```
+
+---
+
+## 2. Dynamic Calendar (Date Dimension) in M
+
+This M query dynamically generates an enterprise Date dimension without external dependencies:
 
 ```powerquery
 let
@@ -36,32 +48,40 @@ in
 
 ---
 
-## 2. Denormalized Product Dimension (`Dim_Product`)
+## 3. Denormalized Product Dimension (`Dim_Product`)
 
-Merge `products`, `brands`, and `categories` into a single Star Schema dimension in M:
+Merge `products`, `brands`, and `categories` into a single Star Schema dimension in M.
+> **Note**: Uses `Kind="Sheet"` and explicit blank row filtering to prevent null key propagation:
 
 ```powerquery
 let
     Source = Excel.Workbook(File.Contents(FilePath), null, true),
     
-    // 1. Load Products Table
-    products_Table = Source{[Item="products",Kind="Table"]}[Data],
-    #"Promoted Headers" = Table.PromoteHeaders(products_Table, [PromoteAllScalars=true]),
+    // 1. Load Products Sheet & Filter Blanks
+    products_Table = Source{[Item="products", Kind="Sheet"]}[Data],
+    #"Promoted Products" = Table.PromoteHeaders(products_Table, [PromoteAllScalars=true]),
+    #"Filtered Products" = Table.SelectRows(#"Promoted Products", each [product_id] <> null and [product_id] <> ""),
     
-    // 2. Merge Brands
-    brands_Table = Source{[Item="brands",Kind="Table"]}[Data],
+    // 2. Load Brands Sheet & Filter Blanks
+    brands_Table = Source{[Item="brands", Kind="Sheet"]}[Data],
     #"Promoted Brands" = Table.PromoteHeaders(brands_Table, [PromoteAllScalars=true]),
-    #"Merged Brands" = Table.NestedJoin(#"Promoted Headers", {"brand_id"}, #"Promoted Brands", {"brand_id"}, "BrandTable", JoinKind.LeftOuter),
-    #"Expanded Brand" = Table.ExpandTableColumn(#"Merged Brands", "BrandTable", {"brand_name"}, {"Brand_Name"}),
+    #"Filtered Brands" = Table.SelectRows(#"Promoted Brands", each [brand_id] <> null and [brand_id] <> ""),
     
-    // 3. Merge Categories
-    categories_Table = Source{[Item="categories",Kind="Table"]}[Data],
+    // Merge Brands
+    #"Merged Brands" = Table.NestedJoin(#"Filtered Products", {"brand_id"}, #"Filtered Brands", {"brand_id"}, "BrandTable", JoinKind.LeftOuter),
+    #"Expanded Brands" = Table.ExpandTableColumn(#"Merged Brands", "BrandTable", {"brand_name"}, {"Brand_Name"}),
+    
+    // 3. Load Categories Sheet & Filter Blanks
+    categories_Table = Source{[Item="categories", Kind="Sheet"]}[Data],
     #"Promoted Categories" = Table.PromoteHeaders(categories_Table, [PromoteAllScalars=true]),
-    #"Merged Categories" = Table.NestedJoin(#"Expanded Brand", {"category_id"}, #"Promoted Categories", {"category_id"}, "CategoryTable", JoinKind.LeftOuter),
-    #"Expanded Category" = Table.ExpandTableColumn(#"Merged Categories", "CategoryTable", {"category_name"}, {"Category_Name"}),
+    #"Filtered Categories" = Table.SelectRows(#"Promoted Categories", each [category_id] <> null and [category_id] <> ""),
     
-    // 4. Clean and Standardize Names & Types
-    #"Renamed Columns" = Table.RenameColumns(#"Expanded Category",{
+    // Merge Categories
+    #"Merged Categories" = Table.NestedJoin(#"Expanded Brands", {"category_id"}, #"Filtered Categories", {"category_id"}, "CatTable", JoinKind.LeftOuter),
+    #"Expanded Categories" = Table.ExpandTableColumn(#"Merged Categories", "CatTable", {"category_name"}, {"Category_Name"}),
+    
+    // 4. Rename & Enforce Types
+    #"Renamed Columns" = Table.RenameColumns(#"Expanded Categories", {
         {"product_id", "Product_ID"},
         {"product_name", "Product_Name"},
         {"brand_id", "Brand_ID"},
@@ -69,7 +89,7 @@ let
         {"model_year", "Model_Year"},
         {"list_price", "List_Price"}
     }),
-    #"Changed Types" = Table.TransformColumnTypes(#"Renamed Columns",{
+    #"Changed Types" = Table.TransformColumnTypes(#"Renamed Columns", {
         {"Product_ID", Int64.Type},
         {"Product_Name", type text},
         {"Brand_ID", Int64.Type},
@@ -77,7 +97,7 @@ let
         {"Category_ID", Int64.Type},
         {"Category_Name", type text},
         {"Model_Year", Int64.Type},
-        {"List_Price", Currency.Type}
+        {"List_Price", type number}
     })
 in
     #"Changed Types"
@@ -85,7 +105,41 @@ in
 
 ---
 
-## 3. Sales Fact Table (`Fact_Sales`)
+## 4. Customer Dimension (`Dim_Customer`)
+
+```powerquery
+let
+    Source = Excel.Workbook(File.Contents(FilePath), null, true),
+    customers_Table = Source{[Item="customers", Kind="Sheet"]}[Data],
+    #"Promoted Headers" = Table.PromoteHeaders(customers_Table, [PromoteAllScalars=true]),
+    #"Filtered Blank Rows" = Table.SelectRows(#"Promoted Headers", each [customer_id] <> null and [customer_id] <> ""),
+    #"Added FullName" = Table.AddColumn(#"Filtered Blank Rows", "Customer_Name", each [first_name] & " " & [last_name], type text),
+    #"Renamed Columns" = Table.RenameColumns(#"Added FullName", {
+        {"customer_id", "Customer_ID"},
+        {"email", "Email"},
+        {"phone", "Phone"},
+        {"street", "Street"},
+        {"city", "City"},
+        {"state", "State"},
+        {"zip_code", "Zip_Code"}
+    }),
+    #"Changed Types" = Table.TransformColumnTypes(#"Renamed Columns", {
+        {"Customer_ID", Int64.Type},
+        {"Customer_Name", type text},
+        {"Email", type text},
+        {"Phone", type text},
+        {"Street", type text},
+        {"City", type text},
+        {"State", type text},
+        {"Zip_Code", type text}
+    })
+in
+    #"Changed Types"
+```
+
+---
+
+## 5. Sales Fact Table (`Fact_Sales`)
 
 Combining `orders` and `order_items` into a clean transactional grain fact table:
 
@@ -93,62 +147,93 @@ Combining `orders` and `order_items` into a clean transactional grain fact table
 let
     Source = Excel.Workbook(File.Contents(FilePath), null, true),
     
-    // 1. Load Order Items
-    order_items_Table = Source{[Item="order_items",Kind="Table"]}[Data],
+    // 1. Load Order Items & Filter Blanks
+    order_items_Table = Source{[Item="order_items", Kind="Sheet"]}[Data],
     #"Promoted Items" = Table.PromoteHeaders(order_items_Table, [PromoteAllScalars=true]),
+    #"Filtered Items" = Table.SelectRows(#"Promoted Items", each [order_id] <> null and [order_id] <> ""),
     
-    // 2. Load Orders
-    orders_Table = Source{[Item="orders",Kind="Table"]}[Data],
+    // 2. Load Orders & Filter Blanks
+    orders_Table = Source{[Item="orders", Kind="Sheet"]}[Data],
     #"Promoted Orders" = Table.PromoteHeaders(orders_Table, [PromoteAllScalars=true]),
+    #"Filtered Orders" = Table.SelectRows(#"Promoted Orders", each [order_id] <> null and [order_id] <> ""),
     
-    // 3. Join Header Info to Line Items
-    #"Merged Orders" = Table.NestedJoin(#"Promoted Items", {"order_id"}, #"Promoted Orders", {"order_id"}, "OrderHeader", JoinKind.Inner),
+    // 3. Join Header to Items
+    #"Merged Orders" = Table.NestedJoin(#"Filtered Items", {"order_id"}, #"Filtered Orders", {"order_id"}, "OrderHeader", JoinKind.Inner),
     #"Expanded Orders" = Table.ExpandTableColumn(#"Merged Orders", "OrderHeader", 
         {"customer_id", "order_status", "order_date", "required_date", "shipped_date", "store_id", "staff_id"}, 
         {"Customer_ID", "Order_Status_Code", "Order_Date", "Required_Date", "Shipped_Date", "Store_ID", "Staff_ID"}
     ),
     
-    // 4. Calculate Order Status Description
-    #"Added Status Desc" = Table.AddColumn(#"Expanded Orders", "Order_Status", each 
-        if [Order_Status_Code] = 1 then "Pending"
-        else if [Order_Status_Code] = 2 then "Processing"
-        else if [Order_Status_Code] = 3 then "Rejected"
-        else if [Order_Status_Code] = 4 then "Completed"
+    // 4. Transform Status & Line Metrics
+    #"Added Status" = Table.AddColumn(#"Expanded Orders", "Order_Status", each 
+        if [Order_Status_Code] = 1 then "Pending" 
+        else if [Order_Status_Code] = 2 then "Processing" 
+        else if [Order_Status_Code] = 3 then "Rejected" 
+        else if [Order_Status_Code] = 4 then "Completed" 
         else "Unknown", type text
     ),
+    #"Added Gross" = Table.AddColumn(#"Added Status", "Gross_Amount", each [quantity] * [list_price], type number),
+    #"Added Discount Amt" = Table.AddColumn(#"Added Gross", "Discount_Amount", each [Gross_Amount] * [discount], type number),
+    #"Added Net" = Table.AddColumn(#"Added Discount Amt", "Net_Amount", each [Gross_Amount] - [Discount_Amount], type number),
+    #"Added Days to Ship" = Table.AddColumn(#"Added Net", "Days_To_Ship", each 
+        if [Shipped_Date] = null or [Shipped_Date] = "NULL" then null 
+        else Duration.Days(Date.From([Shipped_Date]) - Date.From([Order_Date])), Int64.Type
+    ),
+    #"Added Key" = Table.AddColumn(#"Added Days to Ship", "Order_Item_Composite_Key", each Text.From([order_id]) & "-" & Text.From([item_id]), type text),
     
-    // 5. Calculate Revenue Metrics per Line
-    #"Added Gross Amount" = Table.AddColumn(#"Added Status Desc", "Gross_Amount", each [quantity] * [list_price], Currency.Type),
-    #"Added Discount Amount" = Table.AddColumn(#"Added Gross Amount", "Discount_Amount", each [Gross_Amount] * [discount], Currency.Type),
-    #"Added Net Amount" = Table.AddColumn(#"Added Discount Amount", "Net_Amount", each [Gross_Amount] - [Discount_Amount], Currency.Type),
-    
-    // 6. Rename & Enforce Strict Types
-    #"Renamed Columns" = Table.RenameColumns(#"Added Net Amount",{
+    // 5. Rename & Type
+    #"Renamed Columns" = Table.RenameColumns(#"Added Key", {
         {"order_id", "Order_ID"},
-        {"item_id", "Line_Item_ID"},
+        {"item_id", "Item_ID"},
         {"product_id", "Product_ID"},
         {"quantity", "Quantity"},
         {"list_price", "Unit_Price"},
         {"discount", "Discount_Rate"}
     }),
-    #"Changed Types" = Table.TransformColumnTypes(#"Renamed Columns",{
+    #"Changed Types" = Table.TransformColumnTypes(#"Renamed Columns", {
+        {"Order_Item_Composite_Key", type text},
         {"Order_ID", Int64.Type},
-        {"Line_Item_ID", Int64.Type},
+        {"Item_ID", Int64.Type},
         {"Product_ID", Int64.Type},
+        {"Quantity", Int64.Type},
+        {"Unit_Price", type number},
+        {"Discount_Rate", type number},
         {"Customer_ID", Int64.Type},
-        {"Store_ID", Int64.Type},
-        {"Staff_ID", Int64.Type},
         {"Order_Status_Code", Int64.Type},
-        {"Order_Status", type text},
         {"Order_Date", type date},
         {"Required_Date", type date},
         {"Shipped_Date", type date},
-        {"Quantity", Int64.Type},
-        {"Unit_Price", Currency.Type},
-        {"Discount_Rate", Percentage.Type},
-        {"Gross_Amount", Currency.Type},
-        {"Discount_Amount", Currency.Type},
-        {"Net_Amount", Currency.Type}
+        {"Store_ID", Int64.Type},
+        {"Staff_ID", Int64.Type},
+        {"Order_Status", type text},
+        {"Gross_Amount", type number},
+        {"Discount_Amount", type number},
+        {"Net_Amount", type number},
+        {"Days_To_Ship", Int64.Type}
+    })
+in
+    #"Changed Types"
+```
+
+---
+
+## 6. Inventory Fact Table (`Fact_Inventory`)
+
+```powerquery
+let
+    Source = Excel.Workbook(File.Contents(FilePath), null, true),
+    stocks_Table = Source{[Item="stocks", Kind="Sheet"]}[Data],
+    #"Promoted Headers" = Table.PromoteHeaders(stocks_Table, [PromoteAllScalars=true]),
+    #"Filtered Blank Rows" = Table.SelectRows(#"Promoted Headers", each [store_id] <> null and [store_id] <> ""),
+    #"Renamed Columns" = Table.RenameColumns(#"Filtered Blank Rows", {
+        {"store_id", "Store_ID"},
+        {"product_id", "Product_ID"},
+        {"quantity", "Quantity_In_Stock"}
+    }),
+    #"Changed Types" = Table.TransformColumnTypes(#"Renamed Columns", {
+        {"Store_ID", Int64.Type},
+        {"Product_ID", Int64.Type},
+        {"Quantity_In_Stock", Int64.Type}
     })
 in
     #"Changed Types"

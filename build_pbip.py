@@ -457,15 +457,18 @@ relationship rel_Inventory_Product
 		source = 
 			let
 				Source = Excel.Workbook(File.Contents(FilePath), null, true),
-				products_Table = Source{[Item="products",Kind="Table"]}[Data],
+				products_Table = Source{[Item="products",Kind="Sheet"]}[Data],
 				#"Promoted Products" = Table.PromoteHeaders(products_Table, [PromoteAllScalars=true]),
-				brands_Table = Source{[Item="brands",Kind="Table"]}[Data],
+				#"Filtered Products" = Table.SelectRows(#"Promoted Products", each [product_id] <> null and [product_id] <> ""),
+				brands_Table = Source{[Item="brands",Kind="Sheet"]}[Data],
 				#"Promoted Brands" = Table.PromoteHeaders(brands_Table, [PromoteAllScalars=true]),
-				#"Merged Brands" = Table.NestedJoin(#"Promoted Products", {"brand_id"}, #"Promoted Brands", {"brand_id"}, "BrandTable", JoinKind.LeftOuter),
+				#"Filtered Brands" = Table.SelectRows(#"Promoted Brands", each [brand_id] <> null and [brand_id] <> ""),
+				#"Merged Brands" = Table.NestedJoin(#"Filtered Products", {"brand_id"}, #"Filtered Brands", {"brand_id"}, "BrandTable", JoinKind.LeftOuter),
 				#"Expanded Brands" = Table.ExpandTableColumn(#"Merged Brands", "BrandTable", {"brand_name"}, {"Brand_Name"}),
-				categories_Table = Source{[Item="categories",Kind="Table"]}[Data],
+				categories_Table = Source{[Item="categories",Kind="Sheet"]}[Data],
 				#"Promoted Categories" = Table.PromoteHeaders(categories_Table, [PromoteAllScalars=true]),
-				#"Merged Categories" = Table.NestedJoin(#"Expanded Brands", {"category_id"}, #"Promoted Categories", {"category_id"}, "CatTable", JoinKind.LeftOuter),
+				#"Filtered Categories" = Table.SelectRows(#"Promoted Categories", each [category_id] <> null and [category_id] <> ""),
+				#"Merged Categories" = Table.NestedJoin(#"Expanded Brands", {"category_id"}, #"Filtered Categories", {"category_id"}, "CatTable", JoinKind.LeftOuter),
 				#"Expanded Categories" = Table.ExpandTableColumn(#"Merged Categories", "CatTable", {"category_name"}, {"Category_Name"}),
 				#"Renamed Columns" = Table.RenameColumns(#"Expanded Categories", {{"product_id", "Product_ID"}, {"product_name", "Product_Name"}, {"brand_id", "Brand_ID"}, {"category_id", "Category_ID"}, {"model_year", "Model_Year"}, {"list_price", "List_Price"}}),
 				#"Changed Types" = Table.TransformColumnTypes(#"Renamed Columns", {{"Product_ID", Int64.Type}, {"Product_Name", type text}, {"Brand_ID", Int64.Type}, {"Brand_Name", type text}, {"Category_ID", Int64.Type}, {"Category_Name", type text}, {"Model_Year", Int64.Type}, {"List_Price", type number}})
@@ -536,9 +539,10 @@ relationship rel_Inventory_Product
 		source = 
 			let
 				Source = Excel.Workbook(File.Contents(FilePath), null, true),
-				customers_Table = Source{[Item="customers",Kind="Table"]}[Data],
+				customers_Table = Source{[Item="customers",Kind="Sheet"]}[Data],
 				#"Promoted Headers" = Table.PromoteHeaders(customers_Table, [PromoteAllScalars=true]),
-				#"Added FullName" = Table.AddColumn(#"Promoted Headers", "Customer_Name", each [first_name] & " " & [last_name], type text),
+				#"Filtered Blank Rows" = Table.SelectRows(#"Promoted Headers", each [customer_id] <> null and [customer_id] <> ""),
+				#"Added FullName" = Table.AddColumn(#"Filtered Blank Rows", "Customer_Name", each [first_name] & " " & [last_name], type text),
 				#"Renamed Columns" = Table.RenameColumns(#"Added FullName", {{"customer_id", "Customer_ID"}, {"email", "Email"}, {"phone", "Phone"}, {"street", "Street"}, {"city", "City"}, {"state", "State"}, {"zip_code", "Zip_Code"}}),
 				#"Changed Types" = Table.TransformColumnTypes(#"Renamed Columns", {{"Customer_ID", Int64.Type}, {"Customer_Name", type text}, {"Email", type text}, {"Phone", type text}, {"Street", type text}, {"City", type text}, {"State", type text}, {"Zip_Code", type text}})
 			in
@@ -602,9 +606,10 @@ relationship rel_Inventory_Product
 		source = 
 			let
 				Source = Excel.Workbook(File.Contents(FilePath), null, true),
-				stores_Table = Source{[Item="stores",Kind="Table"]}[Data],
+				stores_Table = Source{[Item="stores",Kind="Sheet"]}[Data],
 				#"Promoted Headers" = Table.PromoteHeaders(stores_Table, [PromoteAllScalars=true]),
-				#"Renamed Columns" = Table.RenameColumns(#"Promoted Headers", {{"store_id", "Store_ID"}, {"store_name", "Store_Name"}, {"phone", "Phone"}, {"email", "Email"}, {"street", "Street"}, {"city", "City"}, {"state", "State"}, {"zip_code", "Zip_Code"}}),
+				#"Filtered Blank Rows" = Table.SelectRows(#"Promoted Headers", each [store_id] <> null and [store_id] <> ""),
+				#"Renamed Columns" = Table.RenameColumns(#"Filtered Blank Rows", {{"store_id", "Store_ID"}, {"store_name", "Store_Name"}, {"phone", "Phone"}, {"email", "Email"}, {"street", "Street"}, {"city", "City"}, {"state", "State"}, {"zip_code", "Zip_Code"}}),
 				#"Changed Types" = Table.TransformColumnTypes(#"Renamed Columns", {{"Store_ID", Int64.Type}, {"Store_Name", type text}, {"Phone", type text}, {"Email", type text}, {"Street", type text}, {"City", type text}, {"State", type text}, {"Zip_Code", type text}})
 			in
 				#"Changed Types"
@@ -660,9 +665,10 @@ relationship rel_Inventory_Product
 		source = 
 			let
 				Source = Excel.Workbook(File.Contents(FilePath), null, true),
-				staffs_Table = Source{[Item="staffs",Kind="Table"]}[Data],
+				staffs_Table = Source{[Item="staffs",Kind="Sheet"]}[Data],
 				#"Promoted Headers" = Table.PromoteHeaders(staffs_Table, [PromoteAllScalars=true]),
-				#"Added FullName" = Table.AddColumn(#"Promoted Headers", "Staff_Name", each [first_name] & " " & [last_name], type text),
+				#"Filtered Blank Rows" = Table.SelectRows(#"Promoted Headers", each [staff_id] <> null and [staff_id] <> ""),
+				#"Added FullName" = Table.AddColumn(#"Filtered Blank Rows", "Staff_Name", each [first_name] & " " & [last_name], type text),
 				#"Renamed Columns" = Table.RenameColumns(#"Added FullName", {{"staff_id", "Staff_ID"}, {"email", "Email"}, {"phone", "Phone"}, {"active", "Active_Status"}, {"store_id", "Store_ID"}}),
 				#"Changed Types" = Table.TransformColumnTypes(#"Renamed Columns", {{"Staff_ID", Int64.Type}, {"Staff_Name", type text}, {"Email", type text}, {"Phone", type text}, {"Active_Status", Int64.Type}, {"Store_ID", Int64.Type}})
 			in
@@ -795,11 +801,13 @@ relationship rel_Inventory_Product
 		source = 
 			let
 				Source = Excel.Workbook(File.Contents(FilePath), null, true),
-				order_items_Table = Source{[Item="order_items",Kind="Table"]}[Data],
+				order_items_Table = Source{[Item="order_items",Kind="Sheet"]}[Data],
 				#"Promoted Items" = Table.PromoteHeaders(order_items_Table, [PromoteAllScalars=true]),
-				orders_Table = Source{[Item="orders",Kind="Table"]}[Data],
+				#"Filtered Items" = Table.SelectRows(#"Promoted Items", each [order_id] <> null and [order_id] <> ""),
+				orders_Table = Source{[Item="orders",Kind="Sheet"]}[Data],
 				#"Promoted Orders" = Table.PromoteHeaders(orders_Table, [PromoteAllScalars=true]),
-				#"Merged Orders" = Table.NestedJoin(#"Promoted Items", {"order_id"}, #"Promoted Orders", {"order_id"}, "OrderHeader", JoinKind.Inner),
+				#"Filtered Orders" = Table.SelectRows(#"Promoted Orders", each [order_id] <> null and [order_id] <> ""),
+				#"Merged Orders" = Table.NestedJoin(#"Filtered Items", {"order_id"}, #"Filtered Orders", {"order_id"}, "OrderHeader", JoinKind.Inner),
 				#"Expanded Orders" = Table.ExpandTableColumn(#"Merged Orders", "OrderHeader", {"customer_id", "order_status", "order_date", "required_date", "shipped_date", "store_id", "staff_id"}, {"Customer_ID", "Order_Status_Code", "Order_Date", "Required_Date", "Shipped_Date", "Store_ID", "Staff_ID"}),
 				#"Added Status" = Table.AddColumn(#"Expanded Orders", "Order_Status", each if [Order_Status_Code] = 1 then "Pending" else if [Order_Status_Code] = 2 then "Processing" else if [Order_Status_Code] = 3 then "Rejected" else if [Order_Status_Code] = 4 then "Completed" else "Unknown", type text),
 				#"Added Gross" = Table.AddColumn(#"Added Status", "Gross_Amount", each [quantity] * [list_price], type number),
@@ -844,9 +852,10 @@ relationship rel_Inventory_Product
 		source = 
 			let
 				Source = Excel.Workbook(File.Contents(FilePath), null, true),
-				stocks_Table = Source{[Item="stocks",Kind="Table"]}[Data],
+				stocks_Table = Source{[Item="stocks",Kind="Sheet"]}[Data],
 				#"Promoted Headers" = Table.PromoteHeaders(stocks_Table, [PromoteAllScalars=true]),
-				#"Renamed Columns" = Table.RenameColumns(#"Promoted Headers", {{"store_id", "Store_ID"}, {"product_id", "Product_ID"}, {"quantity", "Quantity_In_Stock"}}),
+				#"Filtered Blank Rows" = Table.SelectRows(#"Promoted Headers", each [store_id] <> null and [store_id] <> ""),
+				#"Renamed Columns" = Table.RenameColumns(#"Filtered Blank Rows", {{"store_id", "Store_ID"}, {"product_id", "Product_ID"}, {"quantity", "Quantity_In_Stock"}}),
 				#"Changed Types" = Table.TransformColumnTypes(#"Renamed Columns", {{"Store_ID", Int64.Type}, {"Product_ID", Int64.Type}, {"Quantity_In_Stock", Int64.Type}})
 			in
 				#"Changed Types"

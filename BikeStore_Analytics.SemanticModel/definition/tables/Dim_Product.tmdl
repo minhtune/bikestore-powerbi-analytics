@@ -62,15 +62,18 @@ table Dim_Product
 		source = 
 			let
 				Source = Excel.Workbook(File.Contents(FilePath), null, true),
-				products_Table = Source{[Item="products",Kind="Table"]}[Data],
+				products_Table = Source{[Item="products",Kind="Sheet"]}[Data],
 				#"Promoted Products" = Table.PromoteHeaders(products_Table, [PromoteAllScalars=true]),
-				brands_Table = Source{[Item="brands",Kind="Table"]}[Data],
+				#"Filtered Products" = Table.SelectRows(#"Promoted Products", each [product_id] <> null and [product_id] <> ""),
+				brands_Table = Source{[Item="brands",Kind="Sheet"]}[Data],
 				#"Promoted Brands" = Table.PromoteHeaders(brands_Table, [PromoteAllScalars=true]),
-				#"Merged Brands" = Table.NestedJoin(#"Promoted Products", {"brand_id"}, #"Promoted Brands", {"brand_id"}, "BrandTable", JoinKind.LeftOuter),
+				#"Filtered Brands" = Table.SelectRows(#"Promoted Brands", each [brand_id] <> null and [brand_id] <> ""),
+				#"Merged Brands" = Table.NestedJoin(#"Filtered Products", {"brand_id"}, #"Filtered Brands", {"brand_id"}, "BrandTable", JoinKind.LeftOuter),
 				#"Expanded Brands" = Table.ExpandTableColumn(#"Merged Brands", "BrandTable", {"brand_name"}, {"Brand_Name"}),
-				categories_Table = Source{[Item="categories",Kind="Table"]}[Data],
+				categories_Table = Source{[Item="categories",Kind="Sheet"]}[Data],
 				#"Promoted Categories" = Table.PromoteHeaders(categories_Table, [PromoteAllScalars=true]),
-				#"Merged Categories" = Table.NestedJoin(#"Expanded Brands", {"category_id"}, #"Promoted Categories", {"category_id"}, "CatTable", JoinKind.LeftOuter),
+				#"Filtered Categories" = Table.SelectRows(#"Promoted Categories", each [category_id] <> null and [category_id] <> ""),
+				#"Merged Categories" = Table.NestedJoin(#"Expanded Brands", {"category_id"}, #"Filtered Categories", {"category_id"}, "CatTable", JoinKind.LeftOuter),
 				#"Expanded Categories" = Table.ExpandTableColumn(#"Merged Categories", "CatTable", {"category_name"}, {"Category_Name"}),
 				#"Renamed Columns" = Table.RenameColumns(#"Expanded Categories", {{"product_id", "Product_ID"}, {"product_name", "Product_Name"}, {"brand_id", "Brand_ID"}, {"category_id", "Category_ID"}, {"model_year", "Model_Year"}, {"list_price", "List_Price"}}),
 				#"Changed Types" = Table.TransformColumnTypes(#"Renamed Columns", {{"Product_ID", Int64.Type}, {"Product_Name", type text}, {"Brand_ID", Int64.Type}, {"Brand_Name", type text}, {"Category_ID", Int64.Type}, {"Category_Name", type text}, {"Model_Year", Int64.Type}, {"List_Price", type number}})

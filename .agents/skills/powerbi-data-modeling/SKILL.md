@@ -24,10 +24,13 @@ This skill guides the design of enterprise-grade, performant, and maintainable d
   - Examples: `Dim_Customer`, `Dim_Product`, `Dim_Store`, `Dim_Staff`, `Dim_Date`.
   - Must have a clean unique Primary Key (PK).
 
-### 3. Relationship Golden Rules
+### 3. Relationship Golden Rules & Gotchas
 1. **Direction**: **Single Direction (`1:*`)** from Dimension to Fact.
    - ⚠️ **NEVER** use Bi-Directional filtering (`<->`) unless solving a specific M2M bridge scenario with strict justification. Bi-directional filtering causes ambiguity, incorrect totals, and severe performance degradation.
-2. **Cardinality**: Ensure **One-to-Many (`1:*`)**. 
+2. **Cardinality Integrity & Null Key Prevention**:
+   - Ensure **One-to-Many (`1:*`)** relationships.
+   - ⚠️ **CRITICAL GOTCHA**: If an upstream Excel or CSV source produces blank trailing rows, Dimension tables will contain multiple null/empty string keys. This causes Power BI to throw cardinality errors (e.g. `The relationship has many-to-many cardinality because neither column has unique values`).
+   - **Mandatory Prevention**: Always filter blank IDs in Power Query ETL before loading into the Semantic Model (`Table.SelectRows(..., each [key] <> null and [key] <> "")`).
 3. **Role-Playing Dimensions**:
    - For multiple dates (e.g. `Order Date`, `Required Date`, `Shipped Date`), use ONE `Dim_Date` table.
    - Keep the primary relationship active (`Fact_Sales[Order Date] -> Dim_Date[Date]`).
@@ -35,6 +38,11 @@ This skill guides the design of enterprise-grade, performant, and maintainable d
 
 ### 4. Date Dimension Requirement
 Always create a dedicated `Dim_Date` (Calendar) table marked as an official Date Table in Power BI. Do not rely on Auto Date/Time hierarchies (disable "Auto Date/Time" in Options).
+
+### 5. PBIP Semantic Model Synchronization (TMDL vs model.bim)
+In Power BI Projects (`.pbip`), semantic models can be stored in TMDL (`definition/`) and/or `model.bim`:
+- When updating relationships, queries, or measures programmatically, ensure both TMDL and `model.bim` remain 100% consistent.
+- In modern Power BI Desktop, TMDL is the primary source of truth, but older tools and CI scripts may still read `model.bim`.
 
 ## Reference Guides
 - Detailed Star Schema transformation guide: [star_schema_guide.md](./references/star_schema_guide.md)

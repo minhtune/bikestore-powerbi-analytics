@@ -53,9 +53,10 @@ table Dim_Store
 		source = 
 			let
 				Source = Excel.Workbook(File.Contents(FilePath), null, true),
-				stores_Table = Source{[Item="stores",Kind="Table"]}[Data],
+				stores_Table = Source{[Item="stores",Kind="Sheet"]}[Data],
 				#"Promoted Headers" = Table.PromoteHeaders(stores_Table, [PromoteAllScalars=true]),
-				#"Renamed Columns" = Table.RenameColumns(#"Promoted Headers", {{"store_id", "Store_ID"}, {"store_name", "Store_Name"}, {"phone", "Phone"}, {"email", "Email"}, {"street", "Street"}, {"city", "City"}, {"state", "State"}, {"zip_code", "Zip_Code"}}),
+				#"Filtered Blank Rows" = Table.SelectRows(#"Promoted Headers", each [store_id] <> null and [store_id] <> ""),
+				#"Renamed Columns" = Table.RenameColumns(#"Filtered Blank Rows", {{"store_id", "Store_ID"}, {"store_name", "Store_Name"}, {"phone", "Phone"}, {"email", "Email"}, {"street", "Street"}, {"city", "City"}, {"state", "State"}, {"zip_code", "Zip_Code"}}),
 				#"Changed Types" = Table.TransformColumnTypes(#"Renamed Columns", {{"Store_ID", Int64.Type}, {"Store_Name", type text}, {"Phone", type text}, {"Email", type text}, {"Street", type text}, {"City", type text}, {"State", type text}, {"Zip_Code", type text}})
 			in
 				#"Changed Types"

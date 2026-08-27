@@ -2,6 +2,7 @@
 .pbi/localSettings.json
 .pbi/cache.abf
 *.tmp
+*.bak
 
 # OS & Python
 .DS_Store

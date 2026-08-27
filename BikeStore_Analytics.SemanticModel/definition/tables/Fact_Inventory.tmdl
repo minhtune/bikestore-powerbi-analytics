@@ -29,9 +29,10 @@ table Fact_Inventory
 		source = 
 			let
 				Source = Excel.Workbook(File.Contents(FilePath), null, true),
-				stocks_Table = Source{[Item="stocks",Kind="Table"]}[Data],
+				stocks_Table = Source{[Item="stocks",Kind="Sheet"]}[Data],
 				#"Promoted Headers" = Table.PromoteHeaders(stocks_Table, [PromoteAllScalars=true]),
-				#"Renamed Columns" = Table.RenameColumns(#"Promoted Headers", {{"store_id", "Store_ID"}, {"product_id", "Product_ID"}, {"quantity", "Quantity_In_Stock"}}),
+				#"Filtered Blank Rows" = Table.SelectRows(#"Promoted Headers", each [store_id] <> null and [store_id] <> ""),
+				#"Renamed Columns" = Table.RenameColumns(#"Filtered Blank Rows", {{"store_id", "Store_ID"}, {"product_id", "Product_ID"}, {"quantity", "Quantity_In_Stock"}}),
 				#"Changed Types" = Table.TransformColumnTypes(#"Renamed Columns", {{"Store_ID", Int64.Type}, {"Product_ID", Int64.Type}, {"Quantity_In_Stock", Int64.Type}})
 			in
 				#"Changed Types"

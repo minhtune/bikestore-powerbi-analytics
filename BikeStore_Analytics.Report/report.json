@@ -1,34 +1,278 @@
 {
-  "config": "{\"version\": \"5.68\", \"themeCollection\": {\"baseTheme\": {\"name\": \"CY25SU11\", \"version\": {\"visual\": \"2.4.0\", \"report\": \"3.0.0\", \"page\": \"2.3.0\"}, \"type\": 2}}, \"activeSectionIndex\": 0, \"settings\": {\"useNewFilterPaneExperience\": true, \"allowChangeFilterTypes\": true}}",
-  "layoutOptimization": 0,
-  "sections": [
-    {
-      "displayName": "Executive Overview",
-      "name": "Section_Executive_Overview",
-      "width": 1280,
-      "height": 720,
-      "visualContainers": []
-    },
-    {
-      "displayName": "Products & Inventory",
-      "name": "Section_Products_Inventory",
-      "width": 1280,
-      "height": 720,
-      "visualContainers": []
-    },
-    {
-      "displayName": "Customers & Geography",
-      "name": "Section_Customers_Geography",
-      "width": 1280,
-      "height": 720,
-      "visualContainers": []
-    },
-    {
-      "displayName": "Fulfillment & Operations",
-      "name": "Section_Fulfillment_Operations",
-      "width": 1280,
-      "height": 720,
-      "visualContainers": []
-    }
-  ]
+    "config":  "{\"version\": \"5.68\", \"themeCollection\": {\"baseTheme\": {\"name\": \"CY25SU11\", \"version\": {\"visual\": \"2.4.0\", \"report\": \"3.0.0\", \"page\": \"2.3.0\"}, \"type\": 2}}, \"activeSectionIndex\": 0, \"settings\": {\"useNewFilterPaneExperience\": true, \"allowChangeFilterTypes\": true}}",
+    "layoutOptimization":  0,
+    "sections":  [
+                     {
+                         "displayName":  "Executive Overview",
+                         "name":  "Section_Executive_Overview",
+                         "width":  1280,
+                         "height":  720,
+                         "visualContainers":  [
+                                                  {
+                                                      "x":  20,
+                                                      "y":  20,
+                                                      "z":  1000,
+                                                      "width":  230,
+                                                      "height":  95,
+                                                      "config":  "{\"layouts\":[{\"id\":0,\"position\":{\"width\":230,\"y\":20,\"z\":1000,\"x\":20,\"tabOrder\":1000,\"height\":95}}],\"singleVisual\":{\"projections\":{\"Values\":[{\"queryRef\":\"_Measures.Total Net Revenue\"}]},\"visualType\":\"card\",\"prototypeQuery\":{\"From\":[{\"Name\":\"m\",\"Entity\":\"_Measures\",\"Type\":0}],\"Select\":[{\"Name\":\"_Measures.Total Net Revenue\",\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Total Net Revenue\"}}],\"Version\":2}},\"name\":\"b5232cdccfe8de516b5b\"}"
+                                                  },
+                                                  {
+                                                      "x":  270,
+                                                      "y":  20,
+                                                      "z":  1010,
+                                                      "width":  230,
+                                                      "height":  95,
+                                                      "config":  "{\"layouts\":[{\"id\":0,\"position\":{\"width\":230,\"y\":20,\"z\":1010,\"x\":270,\"tabOrder\":1010,\"height\":95}}],\"singleVisual\":{\"projections\":{\"Values\":[{\"queryRef\":\"_Measures.Total Orders\"}]},\"visualType\":\"card\",\"prototypeQuery\":{\"From\":[{\"Name\":\"m\",\"Entity\":\"_Measures\",\"Type\":0}],\"Select\":[{\"Name\":\"_Measures.Total Orders\",\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Total Orders\"}}],\"Version\":2}},\"name\":\"fed6bcb816a42946a844\"}"
+                                                  },
+                                                  {
+                                                      "x":  520,
+                                                      "y":  20,
+                                                      "z":  1020,
+                                                      "width":  230,
+                                                      "height":  95,
+                                                      "config":  "{\"layouts\":[{\"id\":0,\"position\":{\"width\":230,\"y\":20,\"z\":1020,\"x\":520,\"tabOrder\":1020,\"height\":95}}],\"singleVisual\":{\"projections\":{\"Values\":[{\"queryRef\":\"_Measures.Average Order Value\"}]},\"visualType\":\"card\",\"prototypeQuery\":{\"From\":[{\"Name\":\"m\",\"Entity\":\"_Measures\",\"Type\":0}],\"Select\":[{\"Name\":\"_Measures.Average Order Value\",\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Average Order Value\"}}],\"Version\":2}},\"name\":\"3b92492d64ed49cecd8e\"}"
+                                                  },
+                                                  {
+                                                      "x":  770,
+                                                      "y":  20,
+                                                      "z":  1030,
+                                                      "width":  230,
+                                                      "height":  95,
+                                                      "config":  "{\"layouts\":[{\"id\":0,\"position\":{\"width\":230,\"y\":20,\"z\":1030,\"x\":770,\"tabOrder\":1030,\"height\":95}}],\"singleVisual\":{\"projections\":{\"Values\":[{\"queryRef\":\"_Measures.Total Units Sold\"}]},\"visualType\":\"card\",\"prototypeQuery\":{\"From\":[{\"Name\":\"m\",\"Entity\":\"_Measures\",\"Type\":0}],\"Select\":[{\"Name\":\"_Measures.Total Units Sold\",\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Total Units Sold\"}}],\"Version\":2}},\"name\":\"3ec87ef0fd93d235cadb\"}"
+                                                  },
+                                                  {
+                                                      "x":  1020,
+                                                      "y":  20,
+                                                      "z":  1040,
+                                                      "width":  240,
+                                                      "height":  95,
+                                                      "config":  "{\"layouts\":[{\"id\":0,\"position\":{\"width\":240,\"y\":20,\"z\":1040,\"x\":1020,\"tabOrder\":1040,\"height\":95}}],\"singleVisual\":{\"projections\":{\"Values\":[{\"queryRef\":\"_Measures.Total Active Customers\"}]},\"visualType\":\"card\",\"prototypeQuery\":{\"From\":[{\"Name\":\"m\",\"Entity\":\"_Measures\",\"Type\":0}],\"Select\":[{\"Name\":\"_Measures.Total Active Customers\",\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Total Active Customers\"}}],\"Version\":2}},\"name\":\"f59d32edf4169b125d37\"}"
+                                                  },
+                                                  {
+                                                      "x":  20,
+                                                      "y":  130,
+                                                      "z":  2000,
+                                                      "width":  730,
+                                                      "height":  310,
+                                                      "config":  "{\"layouts\":[{\"id\":0,\"position\":{\"width\":730,\"y\":130,\"z\":2000,\"x\":20,\"tabOrder\":2000,\"height\":310}}],\"singleVisual\":{\"projections\":{\"Category\":[{\"queryRef\":\"Dim_Date.YearMonth\",\"active\":true}],\"Y\":[{\"queryRef\":\"_Measures.Total Net Revenue\"}]},\"visualType\":\"lineChart\",\"prototypeQuery\":{\"From\":[{\"Name\":\"d\",\"Entity\":\"Dim_Date\",\"Type\":0},{\"Name\":\"m\",\"Entity\":\"_Measures\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"YearMonth\"},\"Name\":\"Dim_Date.YearMonth\"},{\"Name\":\"_Measures.Total Net Revenue\",\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Total Net Revenue\"}}],\"Version\":2}},\"name\":\"817d50d9340e47b6f6e8\"}"
+                                                  },
+                                                  {
+                                                      "x":  770,
+                                                      "y":  130,
+                                                      "z":  2010,
+                                                      "width":  490,
+                                                      "height":  310,
+                                                      "config":  "{\"layouts\":[{\"id\":0,\"position\":{\"width\":490,\"y\":130,\"z\":2010,\"x\":770,\"tabOrder\":2010,\"height\":310}}],\"singleVisual\":{\"projections\":{\"Category\":[{\"queryRef\":\"Dim_Product.Category_Name\",\"active\":true}],\"Y\":[{\"queryRef\":\"_Measures.Total Net Revenue\"}]},\"visualType\":\"clusteredBarChart\",\"prototypeQuery\":{\"From\":[{\"Name\":\"c\",\"Entity\":\"Dim_Product\",\"Type\":0},{\"Name\":\"m\",\"Entity\":\"_Measures\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"c\"}},\"Property\":\"Category_Name\"},\"Name\":\"Dim_Product.Category_Name\"},{\"Name\":\"_Measures.Total Net Revenue\",\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Total Net Revenue\"}}],\"Version\":2}},\"name\":\"639f8399cd76af3deaf5\"}"
+                                                  },
+                                                  {
+                                                      "x":  20,
+                                                      "y":  460,
+                                                      "z":  3000,
+                                                      "width":  600,
+                                                      "height":  240,
+                                                      "config":  "{\"layouts\":[{\"id\":0,\"position\":{\"width\":600,\"y\":460,\"z\":3000,\"x\":20,\"tabOrder\":3000,\"height\":240}}],\"singleVisual\":{\"projections\":{\"Category\":[{\"queryRef\":\"Dim_Product.Brand_Name\",\"active\":true}],\"Y\":[{\"queryRef\":\"_Measures.Total Net Revenue\"}]},\"visualType\":\"clusteredBarChart\",\"prototypeQuery\":{\"From\":[{\"Name\":\"c\",\"Entity\":\"Dim_Product\",\"Type\":0},{\"Name\":\"m\",\"Entity\":\"_Measures\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"c\"}},\"Property\":\"Brand_Name\"},\"Name\":\"Dim_Product.Brand_Name\"},{\"Name\":\"_Measures.Total Net Revenue\",\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Total Net Revenue\"}}],\"Version\":2}},\"name\":\"62d9146ea5178c99c3d7\"}"
+                                                  },
+                                                  {
+                                                      "x":  640,
+                                                      "y":  460,
+                                                      "z":  3010,
+                                                      "width":  620,
+                                                      "height":  240,
+                                                      "config":  "{\"layouts\":[{\"id\":0,\"position\":{\"width\":620,\"y\":460,\"z\":3010,\"x\":640,\"tabOrder\":3010,\"height\":240}}],\"singleVisual\":{\"projections\":{\"Values\":[{\"queryRef\":\"Dim_Store.Store_Name\"},{\"queryRef\":\"Dim_Store.State\"},{\"queryRef\":\"_Measures.Total Net Revenue\"},{\"queryRef\":\"_Measures.Total Orders\"}]},\"visualType\":\"tableEx\",\"prototypeQuery\":{\"From\":[{\"Name\":\"t0\",\"Entity\":\"Dim_Store\",\"Type\":0},{\"Name\":\"m\",\"Entity\":\"_Measures\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"t0\"}},\"Property\":\"Store_Name\"},\"Name\":\"Dim_Store.Store_Name\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"t0\"}},\"Property\":\"State\"},\"Name\":\"Dim_Store.State\"},{\"Name\":\"_Measures.Total Net Revenue\",\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Total Net Revenue\"}},{\"Name\":\"_Measures.Total Orders\",\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Total Orders\"}}],\"Version\":2}},\"name\":\"5b27af0595a674c5545d\"}"
+                                                  }
+                                              ]
+                     },
+                     {
+                         "displayName":  "Products \u0026 Inventory",
+                         "name":  "Section_Products_Inventory",
+                         "width":  1280,
+                         "height":  720,
+                         "visualContainers":  [
+                                                  {
+                                                      "x":  20,
+                                                      "y":  20,
+                                                      "z":  1000,
+                                                      "width":  290,
+                                                      "height":  95,
+                                                      "config":  "{\"layouts\":[{\"id\":0,\"position\":{\"width\":290,\"y\":20,\"z\":1000,\"x\":20,\"tabOrder\":1000,\"height\":95}}],\"singleVisual\":{\"projections\":{\"Values\":[{\"queryRef\":\"_Measures.Total Stock Quantity\"}]},\"visualType\":\"card\",\"prototypeQuery\":{\"From\":[{\"Name\":\"m\",\"Entity\":\"_Measures\",\"Type\":0}],\"Select\":[{\"Name\":\"_Measures.Total Stock Quantity\",\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Total Stock Quantity\"}}],\"Version\":2}},\"name\":\"455dc03500d951472b71\"}"
+                                                  },
+                                                  {
+                                                      "x":  330,
+                                                      "y":  20,
+                                                      "z":  1010,
+                                                      "width":  290,
+                                                      "height":  95,
+                                                      "config":  "{\"layouts\":[{\"id\":0,\"position\":{\"width\":290,\"y\":20,\"z\":1010,\"x\":330,\"tabOrder\":1010,\"height\":95}}],\"singleVisual\":{\"projections\":{\"Values\":[{\"queryRef\":\"_Measures.Total Stock Value\"}]},\"visualType\":\"card\",\"prototypeQuery\":{\"From\":[{\"Name\":\"m\",\"Entity\":\"_Measures\",\"Type\":0}],\"Select\":[{\"Name\":\"_Measures.Total Stock Value\",\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Total Stock Value\"}}],\"Version\":2}},\"name\":\"404d70a638fb192fb3b6\"}"
+                                                  },
+                                                  {
+                                                      "x":  640,
+                                                      "y":  20,
+                                                      "z":  1020,
+                                                      "width":  290,
+                                                      "height":  95,
+                                                      "config":  "{\"layouts\":[{\"id\":0,\"position\":{\"width\":290,\"y\":20,\"z\":1020,\"x\":640,\"tabOrder\":1020,\"height\":95}}],\"singleVisual\":{\"projections\":{\"Values\":[{\"queryRef\":\"_Measures.Total Units Sold\"}]},\"visualType\":\"card\",\"prototypeQuery\":{\"From\":[{\"Name\":\"m\",\"Entity\":\"_Measures\",\"Type\":0}],\"Select\":[{\"Name\":\"_Measures.Total Units Sold\",\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Total Units Sold\"}}],\"Version\":2}},\"name\":\"5102fa57a3c2c4fbbb78\"}"
+                                                  },
+                                                  {
+                                                      "x":  950,
+                                                      "y":  20,
+                                                      "z":  1030,
+                                                      "width":  310,
+                                                      "height":  95,
+                                                      "config":  "{\"layouts\":[{\"id\":0,\"position\":{\"width\":310,\"y\":20,\"z\":1030,\"x\":950,\"tabOrder\":1030,\"height\":95}}],\"singleVisual\":{\"projections\":{\"Values\":[{\"queryRef\":\"_Measures.Total Net Revenue\"}]},\"visualType\":\"card\",\"prototypeQuery\":{\"From\":[{\"Name\":\"m\",\"Entity\":\"_Measures\",\"Type\":0}],\"Select\":[{\"Name\":\"_Measures.Total Net Revenue\",\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Total Net Revenue\"}}],\"Version\":2}},\"name\":\"19b0d72451560edc970c\"}"
+                                                  },
+                                                  {
+                                                      "x":  20,
+                                                      "y":  130,
+                                                      "z":  2000,
+                                                      "width":  600,
+                                                      "height":  310,
+                                                      "config":  "{\"layouts\":[{\"id\":0,\"position\":{\"width\":600,\"y\":130,\"z\":2000,\"x\":20,\"tabOrder\":2000,\"height\":310}}],\"singleVisual\":{\"projections\":{\"Category\":[{\"queryRef\":\"Dim_Product.Category_Name\",\"active\":true}],\"Y\":[{\"queryRef\":\"_Measures.Total Stock Quantity\"}]},\"visualType\":\"clusteredBarChart\",\"prototypeQuery\":{\"From\":[{\"Name\":\"c\",\"Entity\":\"Dim_Product\",\"Type\":0},{\"Name\":\"m\",\"Entity\":\"_Measures\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"c\"}},\"Property\":\"Category_Name\"},\"Name\":\"Dim_Product.Category_Name\"},{\"Name\":\"_Measures.Total Stock Quantity\",\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Total Stock Quantity\"}}],\"Version\":2}},\"name\":\"85ba21e12998dd4d3cfa\"}"
+                                                  },
+                                                  {
+                                                      "x":  640,
+                                                      "y":  130,
+                                                      "z":  2010,
+                                                      "width":  620,
+                                                      "height":  310,
+                                                      "config":  "{\"layouts\":[{\"id\":0,\"position\":{\"width\":620,\"y\":130,\"z\":2010,\"x\":640,\"tabOrder\":2010,\"height\":310}}],\"singleVisual\":{\"projections\":{\"Category\":[{\"queryRef\":\"Dim_Store.Store_Name\",\"active\":true}],\"Y\":[{\"queryRef\":\"_Measures.Total Stock Quantity\"}]},\"visualType\":\"clusteredBarChart\",\"prototypeQuery\":{\"From\":[{\"Name\":\"c\",\"Entity\":\"Dim_Store\",\"Type\":0},{\"Name\":\"m\",\"Entity\":\"_Measures\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"c\"}},\"Property\":\"Store_Name\"},\"Name\":\"Dim_Store.Store_Name\"},{\"Name\":\"_Measures.Total Stock Quantity\",\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Total Stock Quantity\"}}],\"Version\":2}},\"name\":\"e6d7833b5c10f5a20f2e\"}"
+                                                  },
+                                                  {
+                                                      "x":  20,
+                                                      "y":  460,
+                                                      "z":  3000,
+                                                      "width":  1240,
+                                                      "height":  240,
+                                                      "config":  "{\"layouts\":[{\"id\":0,\"position\":{\"width\":1240,\"y\":460,\"z\":3000,\"x\":20,\"tabOrder\":3000,\"height\":240}}],\"singleVisual\":{\"projections\":{\"Values\":[{\"queryRef\":\"Dim_Product.Product_Name\"},{\"queryRef\":\"Dim_Product.Brand_Name\"},{\"queryRef\":\"Dim_Product.Category_Name\"},{\"queryRef\":\"_Measures.Total Stock Quantity\"},{\"queryRef\":\"_Measures.Total Units Sold\"},{\"queryRef\":\"_Measures.Total Net Revenue\"}]},\"visualType\":\"tableEx\",\"prototypeQuery\":{\"From\":[{\"Name\":\"t0\",\"Entity\":\"Dim_Product\",\"Type\":0},{\"Name\":\"m\",\"Entity\":\"_Measures\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"t0\"}},\"Property\":\"Product_Name\"},\"Name\":\"Dim_Product.Product_Name\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"t0\"}},\"Property\":\"Brand_Name\"},\"Name\":\"Dim_Product.Brand_Name\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"t0\"}},\"Property\":\"Category_Name\"},\"Name\":\"Dim_Product.Category_Name\"},{\"Name\":\"_Measures.Total Stock Quantity\",\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Total Stock Quantity\"}},{\"Name\":\"_Measures.Total Units Sold\",\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Total Units Sold\"}},{\"Name\":\"_Measures.Total Net Revenue\",\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Total Net Revenue\"}}],\"Version\":2}},\"name\":\"e3c6bbdab5f71dca4683\"}"
+                                                  }
+                                              ]
+                     },
+                     {
+                         "displayName":  "Customers \u0026 Geography",
+                         "name":  "Section_Customers_Geography",
+                         "width":  1280,
+                         "height":  720,
+                         "visualContainers":  [
+                                                  {
+                                                      "x":  20,
+                                                      "y":  20,
+                                                      "z":  1000,
+                                                      "width":  290,
+                                                      "height":  95,
+                                                      "config":  "{\"layouts\":[{\"id\":0,\"position\":{\"width\":290,\"y\":20,\"z\":1000,\"x\":20,\"tabOrder\":1000,\"height\":95}}],\"singleVisual\":{\"projections\":{\"Values\":[{\"queryRef\":\"_Measures.Total Active Customers\"}]},\"visualType\":\"card\",\"prototypeQuery\":{\"From\":[{\"Name\":\"m\",\"Entity\":\"_Measures\",\"Type\":0}],\"Select\":[{\"Name\":\"_Measures.Total Active Customers\",\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Total Active Customers\"}}],\"Version\":2}},\"name\":\"880b897c5e3aad52481c\"}"
+                                                  },
+                                                  {
+                                                      "x":  330,
+                                                      "y":  20,
+                                                      "z":  1010,
+                                                      "width":  290,
+                                                      "height":  95,
+                                                      "config":  "{\"layouts\":[{\"id\":0,\"position\":{\"width\":290,\"y\":20,\"z\":1010,\"x\":330,\"tabOrder\":1010,\"height\":95}}],\"singleVisual\":{\"projections\":{\"Values\":[{\"queryRef\":\"_Measures.Total Net Revenue\"}]},\"visualType\":\"card\",\"prototypeQuery\":{\"From\":[{\"Name\":\"m\",\"Entity\":\"_Measures\",\"Type\":0}],\"Select\":[{\"Name\":\"_Measures.Total Net Revenue\",\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Total Net Revenue\"}}],\"Version\":2}},\"name\":\"b3a3d6c9bf973824f633\"}"
+                                                  },
+                                                  {
+                                                      "x":  640,
+                                                      "y":  20,
+                                                      "z":  1020,
+                                                      "width":  290,
+                                                      "height":  95,
+                                                      "config":  "{\"layouts\":[{\"id\":0,\"position\":{\"width\":290,\"y\":20,\"z\":1020,\"x\":640,\"tabOrder\":1020,\"height\":95}}],\"singleVisual\":{\"projections\":{\"Values\":[{\"queryRef\":\"_Measures.Average Order Value\"}]},\"visualType\":\"card\",\"prototypeQuery\":{\"From\":[{\"Name\":\"m\",\"Entity\":\"_Measures\",\"Type\":0}],\"Select\":[{\"Name\":\"_Measures.Average Order Value\",\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Average Order Value\"}}],\"Version\":2}},\"name\":\"265e1b88ef476e30a22e\"}"
+                                                  },
+                                                  {
+                                                      "x":  950,
+                                                      "y":  20,
+                                                      "z":  1030,
+                                                      "width":  310,
+                                                      "height":  95,
+                                                      "config":  "{\"layouts\":[{\"id\":0,\"position\":{\"width\":310,\"y\":20,\"z\":1030,\"x\":950,\"tabOrder\":1030,\"height\":95}}],\"singleVisual\":{\"projections\":{\"Values\":[{\"queryRef\":\"_Measures.Revenue Per Customer\"}]},\"visualType\":\"card\",\"prototypeQuery\":{\"From\":[{\"Name\":\"m\",\"Entity\":\"_Measures\",\"Type\":0}],\"Select\":[{\"Name\":\"_Measures.Revenue Per Customer\",\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Revenue Per Customer\"}}],\"Version\":2}},\"name\":\"cd6b2350880ed5888007\"}"
+                                                  },
+                                                  {
+                                                      "x":  20,
+                                                      "y":  130,
+                                                      "z":  2000,
+                                                      "width":  600,
+                                                      "height":  310,
+                                                      "config":  "{\"layouts\":[{\"id\":0,\"position\":{\"width\":600,\"y\":130,\"z\":2000,\"x\":20,\"tabOrder\":2000,\"height\":310}}],\"singleVisual\":{\"projections\":{\"Category\":[{\"queryRef\":\"Dim_Customer.State\",\"active\":true}],\"Y\":[{\"queryRef\":\"_Measures.Total Net Revenue\"}]},\"visualType\":\"clusteredBarChart\",\"prototypeQuery\":{\"From\":[{\"Name\":\"c\",\"Entity\":\"Dim_Customer\",\"Type\":0},{\"Name\":\"m\",\"Entity\":\"_Measures\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"c\"}},\"Property\":\"State\"},\"Name\":\"Dim_Customer.State\"},{\"Name\":\"_Measures.Total Net Revenue\",\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Total Net Revenue\"}}],\"Version\":2}},\"name\":\"a1611f379e2ad77f809c\"}"
+                                                  },
+                                                  {
+                                                      "x":  640,
+                                                      "y":  130,
+                                                      "z":  2010,
+                                                      "width":  620,
+                                                      "height":  310,
+                                                      "config":  "{\"layouts\":[{\"id\":0,\"position\":{\"width\":620,\"y\":130,\"z\":2010,\"x\":640,\"tabOrder\":2010,\"height\":310}}],\"singleVisual\":{\"projections\":{\"Category\":[{\"queryRef\":\"Dim_Staff.Staff_Name\",\"active\":true}],\"Y\":[{\"queryRef\":\"_Measures.Total Net Revenue\"}]},\"visualType\":\"clusteredBarChart\",\"prototypeQuery\":{\"From\":[{\"Name\":\"c\",\"Entity\":\"Dim_Staff\",\"Type\":0},{\"Name\":\"m\",\"Entity\":\"_Measures\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"c\"}},\"Property\":\"Staff_Name\"},\"Name\":\"Dim_Staff.Staff_Name\"},{\"Name\":\"_Measures.Total Net Revenue\",\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Total Net Revenue\"}}],\"Version\":2}},\"name\":\"5bce2fbd37439c322b90\"}"
+                                                  },
+                                                  {
+                                                      "x":  20,
+                                                      "y":  460,
+                                                      "z":  3000,
+                                                      "width":  1240,
+                                                      "height":  240,
+                                                      "config":  "{\"layouts\":[{\"id\":0,\"position\":{\"width\":1240,\"y\":460,\"z\":3000,\"x\":20,\"tabOrder\":3000,\"height\":240}}],\"singleVisual\":{\"projections\":{\"Values\":[{\"queryRef\":\"Dim_Customer.Customer_Name\"},{\"queryRef\":\"Dim_Customer.City\"},{\"queryRef\":\"Dim_Customer.State\"},{\"queryRef\":\"_Measures.Total Net Revenue\"},{\"queryRef\":\"_Measures.Total Orders\"}]},\"visualType\":\"tableEx\",\"prototypeQuery\":{\"From\":[{\"Name\":\"t0\",\"Entity\":\"Dim_Customer\",\"Type\":0},{\"Name\":\"m\",\"Entity\":\"_Measures\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"t0\"}},\"Property\":\"Customer_Name\"},\"Name\":\"Dim_Customer.Customer_Name\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"t0\"}},\"Property\":\"City\"},\"Name\":\"Dim_Customer.City\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"t0\"}},\"Property\":\"State\"},\"Name\":\"Dim_Customer.State\"},{\"Name\":\"_Measures.Total Net Revenue\",\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Total Net Revenue\"}},{\"Name\":\"_Measures.Total Orders\",\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Total Orders\"}}],\"Version\":2}},\"name\":\"571a158409d5786a8e0a\"}"
+                                                  }
+                                              ]
+                     },
+                     {
+                         "displayName":  "Fulfillment \u0026 Operations",
+                         "name":  "Section_Fulfillment_Operations",
+                         "width":  1280,
+                         "height":  720,
+                         "visualContainers":  [
+                                                  {
+                                                      "x":  20,
+                                                      "y":  20,
+                                                      "z":  1000,
+                                                      "width":  290,
+                                                      "height":  95,
+                                                      "config":  "{\"layouts\":[{\"id\":0,\"position\":{\"width\":290,\"y\":20,\"z\":1000,\"x\":20,\"tabOrder\":1000,\"height\":95}}],\"singleVisual\":{\"projections\":{\"Values\":[{\"queryRef\":\"_Measures.Total Orders\"}]},\"visualType\":\"card\",\"prototypeQuery\":{\"From\":[{\"Name\":\"m\",\"Entity\":\"_Measures\",\"Type\":0}],\"Select\":[{\"Name\":\"_Measures.Total Orders\",\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Total Orders\"}}],\"Version\":2}},\"name\":\"071115ac45ce99ff7bd5\"}"
+                                                  },
+                                                  {
+                                                      "x":  330,
+                                                      "y":  20,
+                                                      "z":  1010,
+                                                      "width":  290,
+                                                      "height":  95,
+                                                      "config":  "{\"layouts\":[{\"id\":0,\"position\":{\"width\":290,\"y\":20,\"z\":1010,\"x\":330,\"tabOrder\":1010,\"height\":95}}],\"singleVisual\":{\"projections\":{\"Values\":[{\"queryRef\":\"_Measures.Total Units Sold\"}]},\"visualType\":\"card\",\"prototypeQuery\":{\"From\":[{\"Name\":\"m\",\"Entity\":\"_Measures\",\"Type\":0}],\"Select\":[{\"Name\":\"_Measures.Total Units Sold\",\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Total Units Sold\"}}],\"Version\":2}},\"name\":\"91ac1f953aa772d9597a\"}"
+                                                  },
+                                                  {
+                                                      "x":  640,
+                                                      "y":  20,
+                                                      "z":  1020,
+                                                      "width":  290,
+                                                      "height":  95,
+                                                      "config":  "{\"layouts\":[{\"id\":0,\"position\":{\"width\":290,\"y\":20,\"z\":1020,\"x\":640,\"tabOrder\":1020,\"height\":95}}],\"singleVisual\":{\"projections\":{\"Values\":[{\"queryRef\":\"_Measures.Total Gross Revenue\"}]},\"visualType\":\"card\",\"prototypeQuery\":{\"From\":[{\"Name\":\"m\",\"Entity\":\"_Measures\",\"Type\":0}],\"Select\":[{\"Name\":\"_Measures.Total Gross Revenue\",\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Total Gross Revenue\"}}],\"Version\":2}},\"name\":\"2015a597f5be63a9c6e4\"}"
+                                                  },
+                                                  {
+                                                      "x":  950,
+                                                      "y":  20,
+                                                      "z":  1030,
+                                                      "width":  310,
+                                                      "height":  95,
+                                                      "config":  "{\"layouts\":[{\"id\":0,\"position\":{\"width\":310,\"y\":20,\"z\":1030,\"x\":950,\"tabOrder\":1030,\"height\":95}}],\"singleVisual\":{\"projections\":{\"Values\":[{\"queryRef\":\"_Measures.Average Discount %\"}]},\"visualType\":\"card\",\"prototypeQuery\":{\"From\":[{\"Name\":\"m\",\"Entity\":\"_Measures\",\"Type\":0}],\"Select\":[{\"Name\":\"_Measures.Average Discount %\",\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Average Discount %\"}}],\"Version\":2}},\"name\":\"e1cd58715692c0a69284\"}"
+                                                  },
+                                                  {
+                                                      "x":  20,
+                                                      "y":  130,
+                                                      "z":  2000,
+                                                      "width":  600,
+                                                      "height":  310,
+                                                      "config":  "{\"layouts\":[{\"id\":0,\"position\":{\"width\":600,\"y\":130,\"z\":2000,\"x\":20,\"tabOrder\":2000,\"height\":310}}],\"singleVisual\":{\"projections\":{\"Category\":[{\"queryRef\":\"Fact_Sales.Order_Status\",\"active\":true}],\"Y\":[{\"queryRef\":\"_Measures.Total Orders\"}]},\"visualType\":\"clusteredBarChart\",\"prototypeQuery\":{\"From\":[{\"Name\":\"c\",\"Entity\":\"Fact_Sales\",\"Type\":0},{\"Name\":\"m\",\"Entity\":\"_Measures\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"c\"}},\"Property\":\"Order_Status\"},\"Name\":\"Fact_Sales.Order_Status\"},{\"Name\":\"_Measures.Total Orders\",\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Total Orders\"}}],\"Version\":2}},\"name\":\"68112d600e2d65791225\"}"
+                                                  },
+                                                  {
+                                                      "x":  640,
+                                                      "y":  130,
+                                                      "z":  2010,
+                                                      "width":  620,
+                                                      "height":  310,
+                                                      "config":  "{\"layouts\":[{\"id\":0,\"position\":{\"width\":620,\"y\":130,\"z\":2010,\"x\":640,\"tabOrder\":2010,\"height\":310}}],\"singleVisual\":{\"projections\":{\"Category\":[{\"queryRef\":\"Dim_Store.Store_Name\",\"active\":true}],\"Y\":[{\"queryRef\":\"_Measures.Total Orders\"}]},\"visualType\":\"clusteredBarChart\",\"prototypeQuery\":{\"From\":[{\"Name\":\"c\",\"Entity\":\"Dim_Store\",\"Type\":0},{\"Name\":\"m\",\"Entity\":\"_Measures\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"c\"}},\"Property\":\"Store_Name\"},\"Name\":\"Dim_Store.Store_Name\"},{\"Name\":\"_Measures.Total Orders\",\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Total Orders\"}}],\"Version\":2}},\"name\":\"8eda13024ed942ab63fe\"}"
+                                                  },
+                                                  {
+                                                      "x":  20,
+                                                      "y":  460,
+                                                      "z":  3000,
+                                                      "width":  1240,
+                                                      "height":  240,
+                                                      "config":  "{\"layouts\":[{\"id\":0,\"position\":{\"width\":1240,\"y\":460,\"z\":3000,\"x\":20,\"tabOrder\":3000,\"height\":240}}],\"singleVisual\":{\"projections\":{\"Values\":[{\"queryRef\":\"Dim_Store.Store_Name\"},{\"queryRef\":\"Dim_Store.City\"},{\"queryRef\":\"Dim_Store.State\"},{\"queryRef\":\"_Measures.Total Orders\"},{\"queryRef\":\"_Measures.Total Net Revenue\"},{\"queryRef\":\"_Measures.Average Discount %\"}]},\"visualType\":\"tableEx\",\"prototypeQuery\":{\"From\":[{\"Name\":\"t0\",\"Entity\":\"Dim_Store\",\"Type\":0},{\"Name\":\"m\",\"Entity\":\"_Measures\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"t0\"}},\"Property\":\"Store_Name\"},\"Name\":\"Dim_Store.Store_Name\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"t0\"}},\"Property\":\"City\"},\"Name\":\"Dim_Store.City\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"t0\"}},\"Property\":\"State\"},\"Name\":\"Dim_Store.State\"},{\"Name\":\"_Measures.Total Orders\",\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Total Orders\"}},{\"Name\":\"_Measures.Total Net Revenue\",\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Total Net Revenue\"}},{\"Name\":\"_Measures.Average Discount %\",\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Average Discount %\"}}],\"Version\":2}},\"name\":\"b051a3552f11e5fe7050\"}"
+                                                  }
+                                              ]
+                     }
+                 ]
 }
