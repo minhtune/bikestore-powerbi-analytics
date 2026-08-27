@@ -61,7 +61,7 @@ table Dim_Product
 		mode: import
 		source = 
 			let
-				Source = Excel.Workbook(File.Contents("BikeStore.xlsx"), null, true),
+				Source = Excel.Workbook(File.Contents(FilePath), null, true),
 				products_Table = Source{[Item="products",Kind="Table"]}[Data],
 				#"Promoted Products" = Table.PromoteHeaders(products_Table, [PromoteAllScalars=true]),
 				brands_Table = Source{[Item="brands",Kind="Table"]}[Data],

@@ -1,0 +1,6 @@
+expression FilePath = "C:\\Users\\minle\\Downloads\\power bi\\BikeStore.xlsx" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: a73f8b91-4e20-41fa-8a50-019918239011
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Text

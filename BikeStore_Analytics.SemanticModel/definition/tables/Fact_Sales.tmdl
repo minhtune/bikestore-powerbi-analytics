@@ -121,7 +121,7 @@ table Fact_Sales
 		mode: import
 		source = 
 			let
-				Source = Excel.Workbook(File.Contents("BikeStore.xlsx"), null, true),
+				Source = Excel.Workbook(File.Contents(FilePath), null, true),
 				order_items_Table = Source{[Item="order_items",Kind="Table"]}[Data],
 				#"Promoted Items" = Table.PromoteHeaders(order_items_Table, [PromoteAllScalars=true]),
 				orders_Table = Source{[Item="orders",Kind="Table"]}[Data],

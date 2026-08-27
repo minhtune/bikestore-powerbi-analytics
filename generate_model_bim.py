@@ -19,6 +19,26 @@ def generate_model_bim(output_path="BikeStore_Analytics.SemanticModel/model.bim"
             },
             "defaultPowerBIDataSourceVersion": "powerBI_V3",
             "sourceQueryCulture": "en-US",
+            "expressions": [
+                {
+                    "name": "FilePath",
+                    "kind": "m",
+                    "expression": [
+                        "\"C:\\\\Users\\\\minle\\\\Downloads\\\\power bi\\\\BikeStore.xlsx\" meta [IsParameterQuery=true, Type=\"Text\", IsParameterQueryRequired=true]"
+                    ],
+                    "lineageTag": "a73f8b91-4e20-41fa-8a50-019918239011",
+                    "annotations": [
+                        {
+                            "name": "PBI_NavigationStepName",
+                            "value": "Navigation"
+                        },
+                        {
+                            "name": "PBI_ResultType",
+                            "value": "Text"
+                        }
+                    ]
+                }
+            ],
             "tables": [
                 {
                     "name": "_Measures",
@@ -309,7 +329,7 @@ def generate_model_bim(output_path="BikeStore_Analytics.SemanticModel/model.bim"
                                 "type": "m",
                                 "expression": [
                                     "let",
-                                    "    Source = Excel.Workbook(File.Contents(\"BikeStore.xlsx\"), null, true),",
+                                    "    Source = Excel.Workbook(File.Contents(FilePath), null, true),",
                                     "    products_Table = Source{[Item=\"products\",Kind=\"Table\"]}[Data],",
                                     "    #\"Promoted Products\" = Table.PromoteHeaders(products_Table, [PromoteAllScalars=true]),",
                                     "    brands_Table = Source{[Item=\"brands\",Kind=\"Table\"]}[Data],",
@@ -394,7 +414,7 @@ def generate_model_bim(output_path="BikeStore_Analytics.SemanticModel/model.bim"
                                 "type": "m",
                                 "expression": [
                                     "let",
-                                    "    Source = Excel.Workbook(File.Contents(\"BikeStore.xlsx\"), null, true),",
+                                    "    Source = Excel.Workbook(File.Contents(FilePath), null, true),",
                                     "    customers_Table = Source{[Item=\"customers\",Kind=\"Table\"]}[Data],",
                                     "    #\"Promoted Headers\" = Table.PromoteHeaders(customers_Table, [PromoteAllScalars=true]),",
                                     "    #\"Added FullName\" = Table.AddColumn(#\"Promoted Headers\", \"Customer_Name\", each [first_name] & \" \" & [last_name], type text),",
@@ -466,7 +486,7 @@ def generate_model_bim(output_path="BikeStore_Analytics.SemanticModel/model.bim"
                                 "type": "m",
                                 "expression": [
                                     "let",
-                                    "    Source = Excel.Workbook(File.Contents(\"BikeStore.xlsx\"), null, true),",
+                                    "    Source = Excel.Workbook(File.Contents(FilePath), null, true),",
                                     "    stores_Table = Source{[Item=\"stores\",Kind=\"Table\"]}[Data],",
                                     "    #\"Promoted Headers\" = Table.PromoteHeaders(stores_Table, [PromoteAllScalars=true]),",
                                     "    #\"Renamed Columns\" = Table.RenameColumns(#\"Promoted Headers\", {{\"store_id\", \"Store_ID\"}, {\"store_name\", \"Store_Name\"}, {\"phone\", \"Phone\"}, {\"email\", \"Email\"}, {\"street\", \"Street\"}, {\"city\", \"City\"}, {\"state\", \"State\"}, {\"zip_code\", \"Zip_Code\"}}),",
@@ -530,7 +550,7 @@ def generate_model_bim(output_path="BikeStore_Analytics.SemanticModel/model.bim"
                                 "type": "m",
                                 "expression": [
                                     "let",
-                                    "    Source = Excel.Workbook(File.Contents(\"BikeStore.xlsx\"), null, true),",
+                                    "    Source = Excel.Workbook(File.Contents(FilePath), null, true),",
                                     "    staffs_Table = Source{[Item=\"staffs\",Kind=\"Table\"]}[Data],",
                                     "    #\"Promoted Headers\" = Table.PromoteHeaders(staffs_Table, [PromoteAllScalars=true]),",
                                     "    #\"Added FullName\" = Table.AddColumn(#\"Promoted Headers\", \"Staff_Name\", each [first_name] & \" \" & [last_name], type text),",
@@ -671,7 +691,7 @@ def generate_model_bim(output_path="BikeStore_Analytics.SemanticModel/model.bim"
                                 "type": "m",
                                 "expression": [
                                     "let",
-                                    "    Source = Excel.Workbook(File.Contents(\"BikeStore.xlsx\"), null, true),",
+                                    "    Source = Excel.Workbook(File.Contents(FilePath), null, true),",
                                     "    order_items_Table = Source{[Item=\"order_items\",Kind=\"Table\"]}[Data],",
                                     "    #\"Promoted Items\" = Table.PromoteHeaders(order_items_Table, [PromoteAllScalars=true]),",
                                     "    orders_Table = Source{[Item=\"orders\",Kind=\"Table\"]}[Data],",
@@ -726,7 +746,7 @@ def generate_model_bim(output_path="BikeStore_Analytics.SemanticModel/model.bim"
                                 "type": "m",
                                 "expression": [
                                     "let",
-                                    "    Source = Excel.Workbook(File.Contents(\"BikeStore.xlsx\"), null, true),",
+                                    "    Source = Excel.Workbook(File.Contents(FilePath), null, true),",
                                     "    stocks_Table = Source{[Item=\"stocks\",Kind=\"Table\"]}[Data],",
                                     "    #\"Promoted Headers\" = Table.PromoteHeaders(stocks_Table, [PromoteAllScalars=true]),",
                                     "    #\"Renamed Columns\" = Table.RenameColumns(#\"Promoted Headers\", {{\"store_id\", \"Store_ID\"}, {\"product_id\", \"Product_ID\"}, {\"quantity\", \"Quantity_In_Stock\"}}),",

@@ -45,7 +45,7 @@ table Dim_Staff
 		mode: import
 		source = 
 			let
-				Source = Excel.Workbook(File.Contents("BikeStore.xlsx"), null, true),
+				Source = Excel.Workbook(File.Contents(FilePath), null, true),
 				staffs_Table = Source{[Item="staffs",Kind="Table"]}[Data],
 				#"Promoted Headers" = Table.PromoteHeaders(staffs_Table, [PromoteAllScalars=true]),
 				#"Added FullName" = Table.AddColumn(#"Promoted Headers", "Staff_Name", each [first_name] & " " & [last_name], type text),

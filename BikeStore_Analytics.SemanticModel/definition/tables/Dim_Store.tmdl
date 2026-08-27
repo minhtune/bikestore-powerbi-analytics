@@ -52,7 +52,7 @@ table Dim_Store
 		mode: import
 		source = 
 			let
-				Source = Excel.Workbook(File.Contents("BikeStore.xlsx"), null, true),
+				Source = Excel.Workbook(File.Contents(FilePath), null, true),
 				stores_Table = Source{[Item="stores",Kind="Table"]}[Data],
 				#"Promoted Headers" = Table.PromoteHeaders(stores_Table, [PromoteAllScalars=true]),
 				#"Renamed Columns" = Table.RenameColumns(#"Promoted Headers", {{"store_id", "Store_ID"}, {"store_name", "Store_Name"}, {"phone", "Phone"}, {"email", "Email"}, {"street", "Street"}, {"city", "City"}, {"state", "State"}, {"zip_code", "Zip_Code"}}),
